@@ -245,7 +245,7 @@ const userCtrl = {
 				content: "El correo electrónico es requerido."
 			});
 
-			const user = await Users.findOne({ email });
+			const user = await Users.findOne({ email: email.toLowerCase() });
 			if (user) return res.json({
 				status: 400,
 				success: false,
@@ -264,7 +264,7 @@ const userCtrl = {
 				names: names.replaceAll('  ', ' ').trim(),
 				lastnames: lastnames.replaceAll('  ', ' ').trim(),
 				username: username.replaceAll(' ', '').trim(),
-				email: email.replaceAll(' ', ' ').trim(),
+				email: email.replaceAll(' ', ' ').trim().toLowerCase(),
 				password: passwordHash,
 				role: 1
 			};
@@ -304,7 +304,7 @@ const userCtrl = {
 				content: "Contraseña requerida."
 			});
 
-			const user = await Users.findOne({ email });
+			const user = await Users.findOne({ email: email.toLowerCase() });
 
 			if (!user) return res.json({
 				status: 400,
@@ -549,7 +549,7 @@ const userCtrl = {
 				content: "La contraseña es obligatoria."
 			});
 
-			const userFound = await Users.findOne({ email });
+			const userFound = await Users.findOne({ email: email.toLowerCase() });
 
 			if (userFound) return res.json({
 				status: 400,
@@ -565,7 +565,7 @@ const userCtrl = {
 				content: "Datos incorrectos."
 			});
 
-			user.email = email;
+			user.email = email.toLowerCase();
 
 			await user.save();
 
