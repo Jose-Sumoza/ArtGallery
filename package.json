@@ -1,0 +1,36 @@
+{
+	"name": "gallery",
+	"version": "1.0.0",
+	"description": "Arte Original para cada espacio.",
+	"main": "index.js",
+	"scripts": {
+		"start": "node api/index.js",
+		"api": "nodemon api/index.js --ignore client/**",
+		"client": "cd client && npm run dev",
+		"client-install": "cd client && npm install",
+		"install-all": "npm install && npm run client-install",
+		"dev": "concurrently \"npm run api\" \"npm run client\""
+	},
+	"keywords": [],
+	"author": "Jose Sumoza",
+	"license": "MIT",
+	"dependencies": {
+		"bcrypt": "^5.1.1",
+		"body-parser": "^1.20.2",
+		"cloudinary": "^2.4.0",
+		"concurrently": "^8.2.2",
+		"cookie-parser": "^1.4.6",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"express": "^4.21.1",
+		"formidable": "^3.5.1",
+		"jsonwebtoken": "^9.0.2",
+		"luxon": "^3.5.0",
+		"mongoose": "^8.5.3",
+		"morgan": "^1.10.0",
+		"p-limit": "^3.1.0"
+	},
+	"devDependencies": {
+		"nodemon": "^3.1.7"
+	}
+}
