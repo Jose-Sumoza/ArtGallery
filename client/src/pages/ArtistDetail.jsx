@@ -58,7 +58,7 @@ export const ArtistDetail = () => {
 	const availableContacts = Object.entries(contact).map(([ key, value ]) => {
 		if (key === 'phone') return ({
 			label: key,
-			url: value.dialCode && value.number ? `https://wa.me/${ value.dialCode }${ value.number }` : value,
+			url: value.dialCode && value.number ? `https://wa.me/${ value.dialCode }${ value.number }` : '',
 			tooltip: "Enviar mensaje a WhatsApp"
 		});
 
