@@ -34,6 +34,8 @@ const uploadStreamAsync = buffer => {
 
 const limit = pLimit(1);
 
+const validUsername = v => /^[0-9a-zA-ZÁÉÍÓÚáéíóúñÑ_-]+$/.test(v);
+
 const igUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)/;
 const igUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_.]+)$/i;
 const igUsernameRegex = /^[0-9a-zA-Z_.]+$/;
