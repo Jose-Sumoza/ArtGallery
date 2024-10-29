@@ -58,13 +58,13 @@ export const ArtistDetail = () => {
 	const availableContacts = Object.entries(contact).map(([ key, value ]) => {
 		if (key === 'phone') return ({
 			label: key,
-			url: `https://wa.me/${ value.dialCode }${ value.number }`,
+			url: value ? `https://wa.me/${ value.dialCode }${ value.number }` : value,
 			tooltip: "Enviar mensaje a WhatsApp"
 		});
 
 		if (key === 'email') return ({
 			label: key,
-			url: `mailto:${ value }`,
+			url: value ? `mailto:${ value }` : value,
 			tooltip: "Correo electrónico"
 		});
 
