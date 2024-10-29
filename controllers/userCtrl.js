@@ -228,7 +228,7 @@ const userCtrl = {
 				content: "El nombre de usuario puede tener como máximo 63 caracteres de longitud."
 			});
 
-			if (!isNaN(Number(username))) return res.json({
+			if (!isNaN(Number(username.trim()))) return res.json({
 				status: 400,
 				success: false,
 				content: "El nombre de usuario no debe tener solo números."
@@ -252,7 +252,7 @@ const userCtrl = {
 				content: 'El nombre de usuario no debe empezar ni terminar con un "_".'
 			});
 
-			if (!validUsername(username)) return res.json({
+			if (!validUsername(username.trim())) return res.json({
 				status: 400,
 				success: false,
 				content: 'El nombre de usuario solo puede tener letras, números, guiones y guiones bajos.'
