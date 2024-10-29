@@ -2,11 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+	html {
+		@apply bg-mercury-50;
+		@apply dark:bg-bunker-950;
+	}
+	body {
+		@apply selection:text-mercury-100;
+		@apply selection:bg-accent-500;
+	}
+	#my-tooltip {
+		@apply hidden;
+		@apply lg:block;
+		@apply p-2;
+		@apply text-[80%];
+		@apply font-medium;
+		@apply text-mercury-100;
+		@apply dark:text-primary;
+		@apply bg-primary;
+		@apply dark:bg-bunker-100;
+		@apply z-[9999];
+	}
+	@supports selector(::-webkit-scrollbar) {
+		::-webkit-scrollbar-thumb {
+			@apply bg-bunker-300 dark:bg-bunker-700;
+			/* background-color: var(--color-primary); */
+		}
+	
+		::-webkit-scrollbar-thumb:active {
+			@apply bg-bunker-200 dark:bg-bunker-600;
+			/* background-color: var(--p-color) */
+		}
+	
+		::-webkit-scrollbar-track,
+		::-webkit-scrollbar-corner {
+			@apply bg-mercury-50 dark:bg-bunker-950;
+			/* background-color: var(--skills-background-color-darker); */
+		}
+	}
+	
+	@supports not selector(::-webkit-scrollbar) {
+		* {
+			@apply dark:[scrollbar-color:theme(accentColor.bunker.700)_transparent];
+			/* scrollbar-color: var(--color-primary) transparent; */
+		}
+	}
+}
+
+@layer components {
+	.lockedScroll {
+		@apply overflow-y-hidden;
+		@apply lg:overflow-y-auto;
+	}
+	.lockedModalScroll {
+		@apply overflow-hidden;
+	}
+	.gradient {
+		background-image: theme(accentColor.accent-gradient);
+	}
+}
+
 :root {
 	--color-primary: #141c24;
 	--color-secondary: #61788a;
-	--color-accent: #2194f2;
-	--color-accent-rgb: 33 148 242;
+	--purple: #6647ff;
 	--bg-color: #f7fafa;
 	--header-height: 4rem;
 }
@@ -58,16 +117,45 @@ p {
 
 html {
 	font-family: 'Inter Variable', sans-serif;
-	background-color: var(--bg-color);
-	scrollbar-gutter: stable;
 }
 
 body {
 	overflow-x: hidden;
 	padding-top: var(--header-height);
+	min-width: 100vw;
 }
 
 #root {
 	display: flex;
 	flex-direction: column;
+}
+
+@supports selector(::-webkit-scrollbar) {
+	::-webkit-scrollbar {
+		width: 12px;
+		border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+		border-radius: 10px;
+		/* background-color: var(--color-primary); */
+		border: 3px solid transparent;
+		background-clip: content-box;
+	}
+
+	::-webkit-scrollbar-thumb:active {
+		/* background-color: var(--p-color) */
+	}
+
+	::-webkit-scrollbar-track,
+	::-webkit-scrollbar-corner {
+		/* background-color: var(--skills-background-color-darker); */
+	}
+}
+
+@supports not selector(::-webkit-scrollbar) {
+	* {
+		/* scrollbar-color: var(--color-primary) transparent; */
+		scrollbar-width: thin;
+	}
 }

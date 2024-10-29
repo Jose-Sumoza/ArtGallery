@@ -37,7 +37,7 @@ const fieldHandler = {
 				if (!value) return {
 					status: 400,
 					success: false,
-					content: "El titulo de la publicación es obligatorio."
+					content: "El titulo de la obra es obligatorio."
 				};
 	
 				if (value.length > 50) return {
@@ -50,7 +50,7 @@ const fieldHandler = {
 				if (!value) return {
 					status: 400,
 					success: false,
-					content: "La descripción de la publicación es obligatoria."
+					content: "La descripción de la obra es obligatoria."
 				};
 	
 				if (value.length > 5000) return {
@@ -150,7 +150,7 @@ const postCtrl = {
 								}
 							},
 							{
-								$project: { email: 0, password: 0, role: 0, createdAt: 0, updatedAt: 0, __v: 0 }
+								$project: { contact: 0, email: 0, password: 0, role: 0, createdAt: 0, updatedAt: 0, __v: 0 }
 							}
 						],
 						as: 'author'
@@ -295,7 +295,7 @@ const postCtrl = {
 											}
 										},
 										{
-											$project: { _id: 0, names: 0, lastnames: 0, email: 0, password: 0, role: 0, createdAt: 0, updatedAt: 0, __v: 0 }
+											$project: { _id: 0, contact: 0, email: 0, password: 0, role: 0, createdAt: 0, updatedAt: 0, __v: 0 }
 										}
 									],
 									as: 'author'
@@ -346,7 +346,7 @@ const postCtrl = {
 			if (posts?.qty < 1) return res.json({
 				status: 400,
 				success: false,
-				content: "No hay publicaciones disponibles."
+				content: "No hay obras disponibles."
 			});
 
 			return res.json({
@@ -373,7 +373,7 @@ const postCtrl = {
 			if (!title) return res.json({
 				status: 400,
 				success: false,
-				content: "El titulo de la publicación es obligatorio."
+				content: "El titulo de la obra es obligatorio."
 			});
 
 			if (title.length > 50) return res.json({
@@ -385,7 +385,7 @@ const postCtrl = {
 			if (!description) return res.json({
 				status: 400,
 				success: false,
-				content: "La descripción de la publicación es obligatoria."
+				content: "La descripción de la obra es obligatoria."
 			});
 
 			if (description.length > 5000) return res.json({
@@ -496,7 +496,7 @@ const postCtrl = {
 			return res.json({
 				status: 200,
 				success: true,
-				content: "Publicación eliminada exitosamente."
+				content: "Obra eliminada exitosamente."
 			});
 		} catch (err) {
 			const { message } = err;

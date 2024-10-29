@@ -1,5 +1,6 @@
 import { useEffect, useRef, useContext } from 'react';
 import { GlobalState } from '@/GlobalState';
+import useScrollLock from '@hooks/useScrollLock';
 import { Cancel } from '@icons';
 
 /**
@@ -19,6 +20,7 @@ const Modal = ({
 	onClose,
 	children
 }) => {
+	const { lockScroll, unlockScroll } = useScrollLock(true);
 	const state = useContext(GlobalState);
 	const { loadingModal: [ loading ] } = state;
 	const modalRef = useRef(null);
@@ -27,16 +29,23 @@ const Modal = ({
 		if (loading) return;
 		if (onClose) onClose();
 		setModal(null);
+		unlockScroll();
 	};
 
 	const handleKeyDown = e => {
 		if (loading) return;
 		const { key } = e;
-		if (key === "Escape") handleCloseModal();
+		if (key === "Escape") {
+			handleCloseModal();
+			unlockScroll();
+		};
 	};
 
 	useEffect(() => {
-		if (modalRef && modalRef.current) modalRef.current.focus();
+		if (modalRef && modalRef.current) {
+			modalRef.current.focus();
+			lockScroll();
+		};
 	}, [ modalRef ]);
 
 	return (
@@ -55,7 +64,7 @@ const Modal = ({
 				{
 					hasCloseBtn ?
 						<button
-							className={ `flex items-center justify-center absolute top-4 right-4 p-2 border-none outline-none text-primary bg-transparent transition-colors duration-100 z-[1] [&_svg]:w-4 ${ loading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-red-500' }` }
+							className={ `flex items-center justify-center absolute top-[.85rem] right-4 p-2 border-none outline-none text-primary dark:text-mercury-100 bg-transparent transition-colors duration-100 z-[1] [&_svg]:w-4 [&_svg]:stroke-[1.7] ${ loading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:text-red-500' }` }
 							onClick={ handleCloseModal }
 							disabled={ loading }
 						>

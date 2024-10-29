@@ -8,7 +8,8 @@ import { GlobalState } from '@/GlobalState';
 import Loading from '@components/Loading';
 import MissingPhoto from '@components/MissingPhoto';
 import Photo from '@components/Photo';
-import { Cancel, Edit, Logout, Menu, Settings, SquareRoundedPlus } from '@icons';
+import useScrollLock from '@hooks/useScrollLock';
+import { Cancel, Edit, Logout, Menu, Moon, Settings, SquareRoundedPlus, Sun } from '@icons';
 
 const UserPhoto = ({ photo }) => {
 	return (
@@ -25,6 +26,7 @@ const UserPhoto = ({ photo }) => {
 
 const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 	const navigate = useNavigate();
+	const { unlockScroll } = useScrollLock();
 	const { names, lastnames, username, photo } = user;
 	const { token, userAPI: { user: [ , setUserState ] }, setLogged } = state;
 
@@ -35,6 +37,7 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 				headers: { Authorization: token }
 			});
 
+			unlockScroll();
 			setLogged(false);
 			setOpen(false);
 			navigate("/", { replace: true });
@@ -71,27 +74,24 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 	];
 
 	return (
-		<section className='flex flex-col absolute top-[90%] right-2 lg:-right-8 p-2 min-w-72 rounded-lg bg-white shadow-lg z-50' ref={ ref }>
+		<section className='flex flex-col absolute top-[90%] right-2 lg:-right-8 p-2 min-w-72 rounded-lg bg-white dark:bg-bunker-800 shadow-lg z-50' ref={ ref }>
 
 			<header className='mx-4 mt-4'>
 				<div className='flex items-center gap-2'>
 
 					<Link
 						to={ `artists/${ username }` }
-						data-tooltip-content={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
-						data-tooltip-place='left'
-						data-tooltip-id='my-tooltip'
 						aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
 						onClick={ () => setOpen(false) }
 					>
 						<UserPhoto photo={ photo } />
 					</Link>
 
-					<div className='flex flex-col justify-start h-full'>
+					<div className='flex flex-col justify-start h-full text-primary dark:text-bunker-100'>
 
 						<Link
 							to={ `artists/${ username }` }
-							className='text-sm font-bold hover:text-accent transition-colors duration-100'
+							className='text-sm font-bold hover:text-accent-500 transition-colors duration-100'
 							onClick={ () => setOpen(false) }
 						>
 							<h2 className='font-semibold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
@@ -107,7 +107,7 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 								Ver perfil
 							</Link>
 
-							<span className="mx-2 bg-primary w-1 h-1 rounded-full opacity-50"></span>
+							<span className="mx-2 bg-primary dark:bg-bunker-100 w-1 h-1 rounded-full opacity-50"></span>
 
 							<Link
 								to='profile/edit'
@@ -124,16 +124,16 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 				</div>
 			</header>
 
-			<div className='m-3 h-[2px] border-gray-200 border'></div>
+			<div className='m-3 h-[2px] bg-gray-200 dark:bg-bunker-700'></div>
 
 			<ul>
 				{
 					USER_OPTIONS.map(({ path, icon, title, danger, onEvents }) =>
-						<li key={ path }>
+						<li key={ path } className={ `text-primary dark:text-bunker-100 ${ danger ? 'hover:text-red-600' : '' }` }>
 							<Link
 								to={ path }
 								aria-label={ title }
-								className={ `flex items-center justify-start px-4 py-2 text-primary font-medium rounded gap-4 transition-colors duration-150 ${ danger ? 'hover:bg-red-100 hover:text-red-600' : 'hover:bg-link-water-100' }` }
+								className={ `flex items-center justify-start px-4 py-2 font-medium rounded gap-4 transition-colors duration-150 ${ danger ? 'hover:bg-red-500/10' : 'hover:bg-link-water-100 dark:hover:bg-bunker-600' }` }
 								{ ...onEvents }
 							>
 								{ icon }
@@ -151,11 +151,13 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 const UserNav = ({ user, pathname, state }) => {
 	const { username, photo } = user;
 	const [ open, setOpen ] = useState(false);
+	const { lockScroll, unlockScroll } = useScrollLock();
 	const dropdownRef = useRef(null);
 
 	const handleOpen = e => {
 		e.stopPropagation();
 		e.preventDefault();
+		!open ? lockScroll() : unlockScroll();
 		setOpen(!open);
 		document.removeEventListener('click', handleClick, false);
 		document.removeEventListener('keydown', handleKeyDown, false);
@@ -164,6 +166,7 @@ const UserNav = ({ user, pathname, state }) => {
 	const handleClick = e => {
 		if (dropdownRef.current && dropdownRef.current.contains(e.target)) return;
 		setOpen(false);
+		unlockScroll();
 		e.stopImmediatePropagation();
 		document.removeEventListener('click', handleClick, false);
 		document.removeEventListener('keydown', handleKeyDown, false);
@@ -173,6 +176,7 @@ const UserNav = ({ user, pathname, state }) => {
 		const { key } = e;
 		if (key === "Escape") {
 			setOpen(false);
+			unlockScroll();
 			document.removeEventListener('click', handleClick, false);
 			document.removeEventListener('keydown', handleKeyDown, false);
 		};
@@ -189,7 +193,7 @@ const UserNav = ({ user, pathname, state }) => {
 		{
 			path: 'new',
 			title: 'Crear publicación',
-			mainElement: <SquareRoundedPlus className='w-[1.6rem] text-secondary' strokeWidth='1.7' />,
+			mainElement: <SquareRoundedPlus className='w-[1.6rem] text-secondary dark:text-bunker-800 transition-colors duration-100' strokeWidth='1.7' />,
 			onEvents: {
 				onContextMenu: e => e.preventDefault()
 			},
@@ -218,7 +222,7 @@ const UserNav = ({ user, pathname, state }) => {
 								data-tooltip-content={ title && `/${ path }` !== pathname ? title : '' }
 								data-tooltip-place='bottom'
 								data-tooltip-id='my-tooltip'
-								className={ `${ `/${ path }` === pathname ? 'pointer-events-none after:!block opacity-100' : '' } ${ nav ? 'opacity-70 after:hidden after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent transition-opacity duration-100 hover:opacity-100 hover:after:block' : '' } flex items-center justify-center relative h-full rounded-lg aspect-square font-medium select-none` }
+								className={ `${ `/${ path }` === pathname ? 'pointer-events-none after:opacity-100 [&_svg]:dark:text-bunker-400' : '' } ${ nav ? 'after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent-500 after:transition-opacity after:duration-100 after:opacity-0 [&:hover_svg]:dark:text-bunker-400 hover:after:opacity-100' : '' } flex items-center justify-center relative h-full aspect-square select-none` }
 								{ ...onEvents }
 							>
 								{ mainElement }
@@ -247,10 +251,10 @@ const Nav = ({ pathname }) => {
 			<ul className='flex items-center h-full'>
 				{
 					PAGES.map(({ path, name, accent }) =>
-						<li key={ path } className={ `flex ${ accent ? `text-black-haze hover:text-primary ${ `/${ path }` === pathname ? '!text-primary' : '' }` : '' }` }>
+						<li key={ path } className={ `flex ${ accent ? 'text-mercury-100' : '' }` }>
 							<Link
 								to={ path }
-								className={ `${ `/${ path }` === pathname ? 'pointer-events-none bg-transparent' : '' } ${ accent ? 'border-2 border-accent bg-accent transition-[filter,background-color,border-color,color] duration-100 hover:bg-transparent' : '' } py-2 px-4 rounded-lg font-medium select-none` }
+								className={ `${ `/${ path }` === pathname ? 'pointer-events-none brightness-110' : '' } ${ accent ? 'gradient transition-[filter] duration-100 hover:brightness-110' : '' } py-2 px-4 rounded-lg font-medium select-none` }
 								aria-label={ name }
 							>
 								<span>{ name }</span>
@@ -263,13 +267,16 @@ const Nav = ({ pathname }) => {
 	);
 };
 
-const MenuDropdown = ({ pathname, loading, isLogged, ...props }) => {
+const MenuDropdown = ({ pathname, loading, isLogged, useTheme, ...props }) => {
+	const { isDark, toggleTheme } = useTheme;
+	const { lockScroll, unlockScroll } = useScrollLock();
 	const [ open, setOpen ] = useState(false);
 	const dropdownRef = useRef(null);
 
 	const handleOpen = e => {
 		e.stopPropagation();
 		e.preventDefault();
+		!open ? lockScroll() : unlockScroll();
 		setOpen(!open);
 		document.removeEventListener('click', handleClick, false);
 	};
@@ -277,6 +284,7 @@ const MenuDropdown = ({ pathname, loading, isLogged, ...props }) => {
 	const handleClick = e => {
 		if (dropdownRef.current && dropdownRef.current.contains(e.target)) return;
 		setOpen(false);
+		unlockScroll();
 		e.stopImmediatePropagation();
 		document.removeEventListener('click', handleClick, false);
 	};
@@ -285,7 +293,7 @@ const MenuDropdown = ({ pathname, loading, isLogged, ...props }) => {
 		{
 			path: 'new',
 			title: 'Crear publicación',
-			element: <SquareRoundedPlus className='w-[1.6rem] text-secondary' strokeWidth='1.7' />,
+			element: <SquareRoundedPlus className='w-[1.6rem]' strokeWidth='1.7' />,
 			nav: true
 		}
 	];
@@ -311,34 +319,41 @@ const MenuDropdown = ({ pathname, loading, isLogged, ...props }) => {
 			>
 				{
 					!open ?
-						<Menu className='w-[1.6rem] text-secondary' strokeWidth='1.7' />
+						<Menu className='w-[1.6rem] text-secondary dark:text-bunker-800 stroke-2' />
 					:
-						<Cancel className='w-[1.6rem] text-secondary' strokeWidth='1.7' />
+						<Cancel className='w-[1.6rem] text-secondary dark:text-bunker-800 stroke-2' />
 				}
 			</div>
 
 			
 			<div
-				className={ `${ open ? 'flex' : 'hidden' } flex-col absolute top-[90%] left-0 px-4 py-8 w-full rounded-b bg-black-haze gap-4 shadow-lg z-50` }
+				className={ `${ open ? 'flex' : 'hidden' } flex-col absolute top-[90%] left-0 px-4 py-8 w-full rounded-b bg-mercury-50 dark:bg-bunker-950 gap-4 shadow-lg z-50` }
 				ref={ dropdownRef }
 			>
 
 				{
 					loading ?
-						<Loading size="25" color="var(--color-accent)" stroke="2.5" />
+						<Loading size="25" color="var(--purple)" stroke="2.5" />
 					:
 						<ul className='flex items-center justify-between w-full'>
 							{
 								isLogged ?
 									USER_PAGES.map(({ path, title, element, nav }) =>
-										<li key={ path } className={ `h-full` }>
+										<li
+											key={ path }
+											className={ `h-full ${ `/${ path }` === pathname ? 'text-accent-500' : 'text-secondary dark:text-bunker-800' }` }
+										>
 											<Link
 												to={ path }
 												data-tooltip-content={ title && `/${ path }` !== pathname ? title : '' }
 												data-tooltip-place='bottom'
 												data-tooltip-id='my-tooltip'
-												className={ `${ `/${ path }` === pathname ? 'pointer-events-none after:!block opacity-100' : '' } ${ nav ? 'opacity-70 after:hidden after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent transition-opacity duration-100 hover:opacity-100 hover:after:block' : '' } flex items-center justify-center relative h-full rounded-lg aspect-square font-medium select-none` }
-												onClick={ () => setOpen(false) }
+												className={ ` ${ `/${ path }` === pathname ? 'pointer-events-none' : '' } ${ nav ? 'transition-colors duration-100' : '' } flex items-center justify-center h-full aspect-square select-none` }
+												onClick={ () => {
+													setOpen(false);
+													unlockScroll();
+													document.removeEventListener('click', handleClick, false);
+												}}
 											>
 												{ element }
 											</Link>
@@ -347,13 +362,18 @@ const MenuDropdown = ({ pathname, loading, isLogged, ...props }) => {
 								:
 									PAGES.map(({ path, name, icon }) =>
 										<li
-										key={ path } className={ `text-secondary hover:opacity-100 transition-opacity duration-100 ${ `/${ path }` === pathname ? 'opacity-100' : 'opacity-70' }` }
+											key={ path }
+											className={ `${ `/${ path }` === pathname ? 'text-accent-500' : 'text-secondary dark:text-bunker-800' } transition-colors duration-100` }
 										>
 											<Link
 												to={ path }
-												className={ `${ `/${ path }` === pathname ? 'pointer-events-none bg-transparent' : '' } flex p-2 rounded-lg font-medium select-none gap-2` }
+												className={ `${ `/${ path }` === pathname ? 'pointer-events-none' : '' } flex p-2 rounded-lg font-medium select-none gap-2` }
 												aria-label={ name }
-												onClick={ () => setOpen(false) }
+												onClick={ () => {
+													setOpen(false);
+													unlockScroll();
+													document.removeEventListener('click', handleClick, false);
+												}}
 											>
 												{ icon ? icon : null }
 												<span>{ name }</span>
@@ -366,6 +386,31 @@ const MenuDropdown = ({ pathname, loading, isLogged, ...props }) => {
 
 				<Search className='!min-w-0' id='mb-search' />
 
+				<div className='m-3 h-px bg-gray-200 dark:bg-bunker-700'></div>
+				
+				<div className='flex items-center justify-between w-full'>
+
+					<span className='font-medium text-secondary dark:text-bunker-800'>Cambiar tema:</span>
+
+					<button
+						type="button"
+						onClick={ toggleTheme }
+						className='flex items-center justify-center px-4 py-2 h-full rounded text-mercury-100 bg-accent-500 gap-2 [&_svg]:pointer-events-none'
+					>
+						
+						{ 
+							isDark ?
+								<Sun className='w-[1.3rem] stroke-2' />
+							:
+								<Moon className='w-[1.3rem] stroke-2' />
+						}
+
+						<span>{ isDark ? "Claro" : "Oscuro" }</span>
+
+					</button>
+
+				</div>
+
 			</div>
 
 		</div>
@@ -375,8 +420,9 @@ const MenuDropdown = ({ pathname, loading, isLogged, ...props }) => {
 const Header = () => {
 	const { pathname } = useLocation();
 	const state = useContext(GlobalState);
-	const { userAPI, loading: [ loadingState ] } = state;
+	const { userAPI, loading: [ loadingState ], useTheme } = state;
 	const { user: [ { user, isLogged } ] } = userAPI;
+	const { isDark, toggleTheme } = useTheme;
 	const [ loading, setLoading ] = useState(loadingState);
 
 	useEffect(() => {
@@ -384,12 +430,12 @@ const Header = () => {
 	}, [ user, loadingState ]);
 
 	return (
-		<header className='flex items-center justify-between fixed top-0 lg:px-16 w-full h-16 border-b-gray-200 border-b-[1px] bg-black-haze z-50'>
+		<header className='flex items-center justify-between fixed top-0 lg:px-16 lg:pr-20 w-screen h-16 border-b-gray-200 dark:border-b-bunker-900/50 border-b-[1px] bg-mercury-50 dark:bg-bunker-950 z-50'>
 
 			<div className='hidden lg:flex w-full h-full items-center justify-between'>
 				<div className='flex items-center justify-start h-full py-3 gap-16'>
 	
-					<h2 className='text-xl font-black text-primary'>
+					<h2 className='text-xl font-extrabold text-primary dark:text-mercury-100'>
 						<Link
 							to=".."
 							data-tooltip-content="Inicio"
@@ -409,13 +455,29 @@ const Header = () => {
 	
 				{
 					loading ?
-						<Loading size="25" color="var(--color-accent)" stroke="2.5" />
+						<div className='flex pr-5'>
+							<Loading size="25" color="var(--purple)" stroke="2.5" />
+						</div>
 					:
 						isLogged ?
 							<UserNav user={ user } pathname={ pathname } state={ state } />
 						:
 							<Nav pathname={ pathname } />
 				}
+
+				<button
+					type="button"
+					onClick={ toggleTheme }
+					className='flex items-center justify-center absolute lg:right-[1.6rem] px-3 h-full outline-none text-accent-500'
+				>
+					{ 
+						isDark ?
+							<Sun className='w-[1.3rem] stroke-2' />
+						:
+							<Moon className='w-[1.3rem] stroke-2' />
+					}
+				</button>
+				
 			</div>
 
 			<div className='flex items-center justify-between relative w-full h-full lg:hidden'>
@@ -424,14 +486,12 @@ const Header = () => {
 					pathname={ pathname }
 					loading={ loading }
 					isLogged={ isLogged }
+					useTheme={ useTheme }
 				/>
 	
-				<div className='flex items-center justify-center absolute left-[calc(50%-calc(var(--header-height)/2))] h-full aspect-square text-xl font-black text-primary'>
+				<div className='flex items-center justify-center absolute left-[calc(50%-calc(var(--header-height)/2))] h-full aspect-square text-xl font-black text-primary dark:text-mercury-100'>
 					<Link
 						to=".."
-						data-tooltip-content="Inicio"
-						data-tooltip-place='bottom'
-						data-tooltip-id='my-tooltip'
 						className={ `flex items-center gap-2 [&_svg]:w-9 ${ pathname === '/' ? 'pointer-events-none' : '' } select-none` }
 						aria-label="Inicio"
 					>
@@ -441,7 +501,9 @@ const Header = () => {
 	
 				{
 					loading ?
-						<Loading size="25" color="var(--color-accent)" stroke="2.5" />
+						<div className='flex pr-4'>
+							<Loading size="25" color="var(--purple)" stroke="2.5" />
+						</div>
 					:
 						isLogged ?
 							<UserNav user={ user } pathname={ pathname } state={ state } />

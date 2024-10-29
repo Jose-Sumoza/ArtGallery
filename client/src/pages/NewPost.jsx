@@ -25,8 +25,9 @@ export const NewPost = () => {
 
 	const params = useParams();
 	const state = useContext(GlobalState);
-	const { postsAPI } = state;
+	const { postsAPI, useTheme } = state;
 	const { createPost, editPost, getById } = postsAPI;
+	const { isDark } = useTheme;
 	const navigate = useNavigate();
 	const [ loading, setLoading ] = useState(false);
 	const [ postData, setPostData ] = useReducer(reducer, INITIAL_DATA);
@@ -218,7 +219,7 @@ export const NewPost = () => {
 
 	if (editMode && !postData.title) return (
 		<div className='flex items-center justify-center w-full'>
-			<Loading size="150" color="var(--color-primary)" stroke="5" />
+			<Loading size="150" color={ isDark ? 'var(--purple)' : 'var(--color-primary)' } stroke="5" />
 		</div>
 	);
 
@@ -233,7 +234,7 @@ export const NewPost = () => {
 					classNames={{
 						base: '!justify-start h-full',
 						subtitle: 'text-center',
-						content: 'lg:!flex-row justify-between flex-[1_1_0] mt-6 h-full !gap-6'
+						content: 'lg:!flex-row justify-between flex-[1_1_0] lg:mt-6 h-full !gap-6'
 					}}
 				>
 
@@ -243,13 +244,13 @@ export const NewPost = () => {
 	
 							<Fieldset.Field.Label
 								htmlFor='images'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Obra de arte
 							</Fieldset.Field.Label>
 	
 							<Fieldset.Field.Container 
-								className={ `flex items-center justify-center relative p-8 !h-[25rem] border border-link-water-300 rounded transition-colors duration-100 overflow-hidden ${ !previewURL ? ' hover:border-accent' : '' }` }
+								className={ `flex items-center justify-center relative p-8 !h-[25rem] border border-link-water-300 dark:border-bunker-800 rounded dark:bg-bunker-600/10 transition-colors duration-100 overflow-hidden ${ !previewURL ? ' hover:border-accent-500' : '' }` }
 								data-tooltip-content={ previewURL ? '' : "Escoge una imagen" }
 								data-tooltip-place='left'
 								data-tooltip-id='my-tooltip'
@@ -264,7 +265,7 @@ export const NewPost = () => {
 														data-tooltip-content="Reemplazar imagen"
 														data-tooltip-place='bottom'
 														data-tooltip-id='my-tooltip'
-														className='!absolute top-3 left-3 p-1 bg-white rounded-full shadow-md cursor-pointer hover:text-accent'
+														className='!absolute top-3 left-3 p-1 text-bunker-700 dark:text-mercury-100 bg-white dark:bg-bunker-900/50 rounded-full shadow-md cursor-pointer hover:text-accent-500'
 														onClick={ () => inputImagesRef.current.click() }
 													>
 														<Edit className='!w-4' />
@@ -288,15 +289,15 @@ export const NewPost = () => {
 										<div className='flex flex-col items-center gap-2'>
 											<div
 												onClick={ () => inputImagesRef.current.click() }
-												className={ `flex items-center justify-center px-4 py-2 w-fit border border-link-water-300 rounded bg-link-water-50 hover:bg-link-water-300 hover:border-link-water-400 transition-[filter_color_border-color] duration-100 overflow-hidden gap-2 z-10 cursor-pointer ${ loading ? 'cursor-not-allowed opacity-80 hover:!bg-link-water-50 hover:!border-link-water-300' : '' }` }
+												className={ `flex items-center justify-center px-4 py-2 w-fit border border-link-water-300 dark:border-bunker-800 rounded bg-link-water-50 dark:bg-bunker-950 hover:bg-link-water-300 hover:dark:bg-bunker-950/40 hover:border-link-water-400 hover:dark:border-bunker-700 transition-[filter,color,background-color,border-color] duration-100 overflow-hidden gap-2 z-10 cursor-pointer ${ loading ? 'cursor-not-allowed opacity-80 hover:!bg-link-water-50 hover:!border-link-water-300' : '' }` }
 											>
 				
-												<ArrowUp className='w-4 h-4 text-accent' />
+												<ArrowUp className='w-4 h-4 text-accent-500' />
 				
-												<span className='text-sm text-primary font-semibold'>Sube tu obra de arte</span>
+												<span className='text-sm text-primary dark:text-mercury-100 font-semibold'>Sube tu obra de arte</span>
 				
 											</div>
-											<span className='text-xs font-medium tracking-wider uppercase text-secondary'>jpg, jpeg, png, webp</span>
+											<span className='text-xs font-medium tracking-wider uppercase text-secondary dark:text-bunker-600'>jpg, jpeg, png, webp</span>
 										</div>
 								}
 				
@@ -325,7 +326,7 @@ export const NewPost = () => {
 	
 							<Fieldset.Field.Label
 								htmlFor='title'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Título
 							</Fieldset.Field.Label>
@@ -342,7 +343,7 @@ export const NewPost = () => {
 									maxLength={ 50 }
 									required
 									disabled={ loading }
-									className='!px-4 !py-2 !rounded bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed'
+									className='!px-4 !py-2 !rounded dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800'
 								/>
 	
 							</Fieldset.Field.Container>
@@ -353,7 +354,7 @@ export const NewPost = () => {
 
 							<Fieldset.Field.Label
 								htmlFor='description'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Descripción
 							</Fieldset.Field.Label>
@@ -369,7 +370,7 @@ export const NewPost = () => {
 									required
 									maxLength={ 5000 }
 									disabled={ loading }
-									className='!px-4 !py-2 resize-none [field-sizing:content] max-h-[374px] border border-link-water-200 !rounded bg-link-water-100 transition-colors duration-100 focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed'
+									className='!px-4 !py-2 resize-none [field-sizing:content] max-h-[374px] !rounded dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800'
 								/>
 
 							</Fieldset.Field.Container>
@@ -383,7 +384,7 @@ export const NewPost = () => {
 								ref={ inputTagsRef }
 							>
 								<Fieldset.Field.Label
-									className='font-medium after:content-["_*"] after:text-red-500'
+									className='font-medium after:content-["_*"] after:text-accent-500'
 								>
 									Etiquetas
 								</Fieldset.Field.Label>
@@ -401,8 +402,8 @@ export const NewPost = () => {
 							<Fieldset.Field.Container className='flex flex-col !items-start gap-1'>
 
 									<Tags
-										className={ `flex flex-wrap w-full gap-2 [&_li]:cursor-pointer [&_li.active]:bg-accent [&_li.active]:text-white [&_li.active]:border-transparent ${ postData.tags.length === 10 || loading ? '[&_li:not(.active)]:border-link-water-400 [&_li:not(.active)]:bg-gray-400 [&_li:not(.active)]:opacity-50 [&_li:not(.active)]:cursor-not-allowed' : '' }` }
-										tags={ POST.tags }
+										className={ `flex flex-wrap w-full gap-2 [&_li]:cursor-pointer [&_li.active]:bg-accent-500 [&_li.active]:text-mercury-100 [&_li.active]:border-transparent ${ postData.tags.length === 10 || loading ? '[&_li:not(.active)]:border-link-water-400 [&_li:not(.active)]:dark:border-bunker-800 [&_li:not(.active)]:bg-gray-400 [&_li:not(.active)]:dark:bg-bunker-900 [&_li:not(.active)]:opacity-50 [&_li:not(.active)]:dark:opacity-30 [&_li:not(.active)]:cursor-not-allowed' : '' }` }
+										tags={ POST.tags.sort((a, b) => a.localeCompare(b, 'es')) }
 										ref={ tagsRef }
 										onClick={ e => {
 											if (loading) return toast.error('No puedes seleccionar etiquetas en este momento');
@@ -436,17 +437,17 @@ export const NewPost = () => {
 
 						<button
 							type='submit'
-							className={ `flex items-center justify-center px-4 py-2 w-fit border border-transparent rounded bg-accent gap-2 transition-[filter_color_border-color] duration-100 group-invalid:cursor-not-allowed group-invalid:border-gray-400 group-invalid:bg-gray-400 group-invalid:opacity-50 group-data-[invalid=true]:cursor-not-allowed group-data-[invalid=true]:border-gray-400 group-data-[invalid=true]:bg-gray-400 group-data-[invalid=true]:opacity-50 ${ loading ? 'cursor-not-allowed opacity-80 hover:!bg-accent hover:!border-transparent' : 'group-data-[invalid=false]:group-valid:hover:brightness-110' }` }
+							className={ `flex items-center justify-center px-4 py-2 w-fit rounded gradient bg-accent-500 gap-2 transition-[filter,color,background-color,background-image] duration-100 group-invalid:cursor-not-allowed group-invalid:bg-none group-invalid:opacity-50 group-data-[invalid=true]:cursor-not-allowed group-data-[invalid=true]:bg-none group-data-[invalid=true]:opacity-50 ${ loading ? 'cursor-not-allowed opacity-80 hover:brightness-100' : 'group-data-[invalid=false]:group-valid:hover:brightness-110' }` }
 						>
 
 							{
 								loading ?
 									<Loading size="16" stroke="1.5" color='var(--bg-color)' />
 								:
-									<ArrowUp className={ `w-4 h-4 text-white group-data-[invalid=true]:text-accent` } /> 
+									<ArrowUp className='w-4 h-4 text-mercury-100' /> 
 							}
 
-							<span className='text-sm text-primary font-semibold group-data-[invalid=false]:text-white'>{ editMode ? "Actualizar" : "Publicar" }</span>
+							<span className='text-sm font-semibold text-mercury-100'>{ editMode ? "Actualizar" : "Publicar" }</span>
 
 						</button>
 

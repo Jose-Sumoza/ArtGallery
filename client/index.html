@@ -5,7 +5,7 @@
 		<title>ArtGallery</title>
 		
 		<meta charset="UTF-8" />
-		<meta name="description" content="Arte Original para cada espacio. Vea nuestras colecciones seleccionadas o enumere su propio trabajo para llegar a una audiencia global." />
+		<meta name="description" content="Arte Original para cada espacio. Vea nuestras obras seleccionadas o enumere su propio trabajo para llegar a una audiencia global." />
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" sizes='any' />
 		<link rel="canonical" href="https://artgallery-web.vercel.app" />
@@ -15,16 +15,32 @@
 
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content="ArtGallery" />
-		<meta name="twitter:description" content="Arte Original para cada espacio. Vea nuestras colecciones seleccionadas o enumere su propio trabajo para llegar a una audiencia global." />
+		<meta name="twitter:description" content="Arte Original para cada espacio. Vea nuestras obras seleccionadas o enumere su propio trabajo para llegar a una audiencia global." />
 		<meta name="twitter:image" content="https://artgallery-web.vercel.app/og.webp" />
 
 		<meta name="og:image" content="https://artgallery.vercel.app/og.webp" />
 		<meta name="og:title" content="ArtGallery" />
-		<meta name="og:description" content="Arte Original para cada espacio. Vea nuestras colecciones seleccionadas o enumere su propio trabajo para llegar a una audiencia global." />
+		<meta name="og:description" content="Arte Original para cada espacio. Vea nuestras obras seleccionadas o enumere su propio trabajo para llegar a una audiencia global." />
 		<meta name="og:url" content="https://artgallery-web.vercel.app/" />
 		<meta name="og:site_name" content="ArtGallery" />
 		<meta name="og:type" content="website" />
 		<meta name="og:locale" content="es_MX" />
+		
+		<script>
+			window.getThemePreference = () => {
+				const localItem =
+					typeof localStorage !== "undefined" &&
+					localStorage.getItem("theme");
+
+				if (localItem) return localItem;
+				
+				return 'dark';
+			};
+
+			const isDark = window.getThemePreference() === "dark";
+			
+			document.documentElement.classList.toggle("dark", isDark);
+		</script>
 	</head>
 
 	<body>

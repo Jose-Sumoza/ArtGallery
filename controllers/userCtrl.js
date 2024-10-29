@@ -34,7 +34,37 @@ const uploadStreamAsync = buffer => {
 
 const limit = pLimit(1);
 
-const validUsername = v => /^[0-9a-zA-ZÁÉÍÓÚáéíóúñÑ_-]+$/.test(v);
+const igUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)/;
+const igUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_.]+)$/i;
+const igUsernameRegex = /^[0-9a-zA-Z_.]+$/;
+
+const ttkUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com/;
+const ttkUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com\/([A-Za-z0-9-_.]+)$/i;
+const ttkUsernameRegex = /^[0-9a-zA-Z_.]+$/;
+
+const fbUrlRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))/;
+const fbUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))\/(?!$)(?:(?:\w)*#!\/)?(?:pages\/|pg\/)?(?:photo\.php\?fbid=)?(?:[\w\-]*\/)*?(?:\/)?(profile\.php\?id=[^\/?&\s]*|[^\/?&\s]*)?(?:\/|&|\?)?.*/;
+const fbUsernameRegex = /^[0-9a-zA-Z.]+$/;
+
+const ttUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com/;
+const ttUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com\/([0-9a-zA-Z_]+)$/i;
+const ttUsernameRegex = /^[0-9a-zA-Z_]+$/;
+
+const isIgUrl = v => igUrlRegex.test(v);
+const isIgUrlValid = v => igUrlValidRegex.test(v);
+const isIgValid = v => igUsernameRegex.test(v);
+
+const isTTkUrl = v => ttkUrlRegex.test(v);
+const isTTkUrlValid = v => ttkUrlValidRegex.test(v);
+const isTTkValid = v => ttkUsernameRegex.test(v);
+
+const isFbUrl = v => fbUrlRegex.test(v);
+const isFbUrlValid = v => fbUrlValidRegex.test(v);
+const isFbValid = v => fbUsernameRegex.test(v);
+
+const isTtUrl = v => ttUrlRegex.test(v);
+const isTtUrlValid = v => ttUrlValidRegex.test(v);
+const isTtValid = v => ttUsernameRegex.test(v);
 
 const fieldHandler = {
 	user: ([ field, value ]) => {
@@ -196,12 +226,6 @@ const userCtrl = {
 				content: "El nombre de usuario puede tener como máximo 63 caracteres de longitud."
 			});
 
-			if (username.includes(' ')) return res.json({
-				status: 400,
-				success: false,
-				content: "El nombre de usuario solo puede tener como máximo 63 caracteres de longitud."
-			})
-
 			if (!isNaN(Number(username))) return res.json({
 				status: 400,
 				success: false,
@@ -264,7 +288,7 @@ const userCtrl = {
 				names: names.replaceAll('  ', ' ').trim(),
 				lastnames: lastnames.replaceAll('  ', ' ').trim(),
 				username: username.replaceAll(' ', '').trim(),
-				email: email.replaceAll(' ', ' ').trim().toLowerCase(),
+				email: email.replaceAll(' ', '').trim().toLowerCase(),
 				password: passwordHash,
 				role: 1
 			};
@@ -323,9 +347,9 @@ const userCtrl = {
 			const refreshToken = createRefreshToken({ id: user._id });
 
 			res.cookie('e229146b1984cd62e322005c53468c', refreshToken, {
-				httpOnly: true,
-				secure: true,
-				sameSite: 'Strict',
+				httpOnly: false,
+				// secure: true,
+				sameSite: 'lax',
 				path: '/user/e229146b1984cd62e322005c53468c',
 				expires: new Date(Date.now() + (400 * 24 * 3600000))
 			});
@@ -496,6 +520,179 @@ const userCtrl = {
 					]);
 					
 					user.photo = images[0];
+					continue;
+				};
+
+				if (key === 'contact') {
+					const parsedContacts = JSON.parse(value);
+
+					for (const contact in parsedContacts) {
+						const value = parsedContacts[contact];
+						
+						if (contact === 'instagram' && value.length) {
+							if (isIgUrl(value) && !isIgUrlValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El Enlace de Instagram es inválido'
+							});
+
+							if (!isIgUrl(value) && !isIgValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Instagram contiene caracteres inválidos'
+							});
+
+							if (isIgValid(value) && value[0] === '.' || value[ value.length - 1 ] === '.') return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Instagram no puede empezar ni terminar con un "."'
+							});
+
+							if (isIgValid(value) && !isNaN(Number(value))) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Instagram no puede tener solo números'
+							});
+
+							if (value.length < 4) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario o enlace de Instagram debe tener al menos 4 caracteres'
+							});
+
+							if (value.length > 116) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario o enlace de Instagram excede el límite de 116 caracteres'
+							});
+
+							parsedContacts.instagram =
+								isIgUrl(value) && isIgUrlValid(value) ?
+									`https://www.instagram.com/${ value.match(igUrlValidRegex)[1] }`
+								:
+									`https://www.instagram.com/${ value }`;
+						};
+						
+						if (contact === 'tiktok' && value.length) {
+							if (isTTkUrl(value) && !isTTkUrlValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El Enlace de TikTok es inválido'
+							});
+
+							if (!isTTkUrl(value) && !isTTkValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de TikTok contiene caracteres inválidos'
+							});
+
+							if (isTTkValid(value) && value[ value.length - 1 ] === '.') return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de TikTok no puede terminar con un "."'
+							});
+
+							if (isTTkValid(value) && !isNaN(Number(value))) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de TikTok no puede tener solo números'
+							});
+
+							if (value.length < 4) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario o enlace de TikTok debe tener al menos 4 caracteres'
+							});
+
+							if (value.length > 116) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario o enlace de TikTok excede el límite de 116 caracteres'
+							});
+
+							parsedContacts.tiktok =
+								isTTkUrl(value) && isTTkUrlValid(value) ?
+									`https://www.tiktok.com/${ value.match(ttkUrlValidRegex)[1] }`
+								:
+									`https://www.tiktok.com/${ value }`;
+						};
+						
+						if (contact === 'facebook' && value.length) {
+							if (isFbUrl(value) && !isFbUrlValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El Enlace de Facebook es inválido'
+							});
+
+							if (!isFbUrl(value) && !isFbValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Facebook contiene caracteres inválidos'
+							});
+
+							if (value.length < 5) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Facebook debe tener al menos 5 caracteres'
+							});
+
+							if (value.length > 116) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Facebook excede el límite de 116 caracteres'
+							});
+
+							parsedContacts.facebook =
+								isFbUrl(value) && isFbUrlValid(value) ?
+									`https://www.facebook.com/${ value.match(fbUrlValidRegex)[1] }`
+								:
+									`https://www.facebook.com/${ value }`;
+						};
+						
+						if (contact === 'twitter' && value.length) {
+							if (isTtUrl(value) && !isTtUrlValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El Enlace de Twitter es inválido'
+							});
+
+							if (!isTtUrl(value) && !isTtValid(value)) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Twitter contiene caracteres inválidos'
+							});
+
+							if (isTtValid(value) && !isNaN(Number(value))) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario de Twitter no puede tener solo números'
+							});
+
+							if (value.length < 5) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario o enlace de Twitter debe tener al menos 5 caracteres'
+							});
+
+							if (value.length > 116) return res.json({
+								status: 400,
+								success: false,
+								content: 'El nombre de usuario o enlace de Twitter excede el límite de 116 caracteres'
+							});
+
+							parsedContacts.twitter =
+								isTtUrl(value) && isTtUrlValid(value) ?
+									`https://www.twitter.com/${ value.match(ttUrlValidRegex)[1] }`
+								:
+									`https://www.twitter.com/${ value }`;
+						};
+
+						if (contact === 'email' && value.length) {
+							parsedContacts.email = value.replaceAll(' ', ' ').trim().toLowerCase();
+						};
+					};
+
+					user.contact = parsedContacts;
 					continue;
 				};
 

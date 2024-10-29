@@ -41,6 +41,44 @@ const userSchema = new Schema({
 		},
 		default: null
 	},
+	contact: {
+		_id: false,
+		phone: {
+			_id: false,
+			dialCode: {
+				type: String,
+				default: ''
+			},
+			iso2: {
+				type: String,
+				default: 've'
+			},
+			number: {
+				type: String,
+				default: ''
+			}
+		},
+		instagram: {
+			type: String,
+			default: ''
+		},
+		tiktok: {
+			type: String,
+			default: ''
+		},
+		facebook: {
+			type: String,
+			default: ''
+		},
+		twitter: {
+			type: String,
+			default: ''
+		},
+		email: {
+			type: String,
+			default: ''
+		}
+	},
 	email: {
 		type: String,
 		required: true,

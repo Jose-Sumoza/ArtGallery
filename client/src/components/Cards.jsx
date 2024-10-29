@@ -14,9 +14,9 @@ const Card = ({ data, type }) => {
 
 			{
 				title || subtitle ?
-					<div className="flex flex-col p-4 h-20 bg-white gap-1">
+					<div className="flex flex-col p-4 h-20 bg-white dark:bg-bunker-900/40 gap-1">
 						{ title ? <h4 className={ `font-medium ${ type === 'post' ? 'line-clamp-2' : 'text-ellipsis overflow-hidden' }` }>{ title }</h4> : null }
-						{ subtitle ? <h5 className='text-sm text-secondary capitalize line-clamp-1'>{ subtitle }</h5> : null }
+						{ subtitle ? <h5 className='text-sm text-secondary dark:text-bunker-500 capitalize line-clamp-1'>{ subtitle }</h5> : null }
 					</div>
 				:
 					null
@@ -36,7 +36,7 @@ const PostCard = ({ doc, title, author }) => {
 		<li key={ doc._id } className='w-72 lg:w-auto snap-start'>
 			<Link
 				to={ `/posts/${ doc._id }` }
-				data-tooltip-content={ `${ doc.title }${ author ? ` por ${ doc.author.username }` : '' }` }
+				data-tooltip-content={ `${ doc.title }${ author ? ` por ${ doc.author.names.split(' ')[0] } ${ doc.author.lastnames.split(' ')[0] }` : '' }` }
 				data-tooltip-place='bottom'
 				data-tooltip-id='my-tooltip'
 				aria-label={ `${ doc.title }${ author ? ` por ${ doc.author.username }` : '' }` }
@@ -59,15 +59,15 @@ const ArtistCard = ({ doc, title, subtitle }) => {
 			/>
 		:
 			<MissingPhoto />,
-		title: title ? doc.username : null,
-		subtitle: subtitle ? doc.headline : null
+		title: title ? `${ doc.names.split(' ')[0] } ${ doc.lastnames.split(' ')[0] }` : null,
+		subtitle: subtitle ? doc.username : null
 	};
 
 	return (
 		<li key={ doc._id } className='w-72 lg:w-auto snap-start'>
 			<Link
 				to={ `/artists/${ doc.username }` }
-				data-tooltip-content={ doc.username }
+				data-tooltip-content={ doc.headline }
 				data-tooltip-place='bottom'
 				data-tooltip-id='my-tooltip'
 				aria-label={ doc.username }

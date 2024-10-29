@@ -99,11 +99,13 @@ export const SignIn = () => {
 								inputMode='email'
 								name="email"
 								id="email"
+								autoComplete="email"
 								value={ authData.email }
 								onChange={ onChange }
 								required
 								disabled={ loading }
-								className='!px-4 !py-2 bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed'
+								autoFocus
+								className='!px-4 !py-2 dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800'
 							/>
 
 						</Fieldset.Field.Container>
@@ -122,11 +124,12 @@ export const SignIn = () => {
 						<Fieldset.Field.Container onEvents={{ onBlur }} className='flex flex-col !items-start gap-1'>
 
 							<Fieldset.Field.Container.Input
-								className={ `peer ${ authData.password?.length ? 'filled' : '' } !px-4 !py-2 bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed` }
+								className={ `peer ${ authData.password?.length ? 'filled' : '' } !px-4 !py-2 dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800` }
 								placeholder='contraseña'
 								type={ showPass ? 'text' : 'password' }
 								name="password"
 								id="password"
+								autoComplete="current-password"
 								value={ authData.password }
 								onChange={ onChange }
 								onFocus={ e => e.currentTarget.selectionStart = e.currentTarget.value.length }
@@ -137,7 +140,7 @@ export const SignIn = () => {
 							/>
 
 							<div
-								className='input__showPassword flex items-center justify-center absolute right-0 w-14 h-full text-primary opacity-0 pointer-events-none transition-opacity duration-100 select-none peer-focus:opacity-100 peer-[.filled]:opacity-100 peer-focus:pointer-events-auto peer-[.filled]:pointer-events-auto peer-focus:cursor-pointer peer-[.filled]:cursor-pointer'
+								className='input__showPassword flex items-center justify-center absolute right-0 w-14 h-full text-primary dark:text-bunker-800 opacity-0 pointer-events-none transition-opacity duration-100 select-none peer-focus:opacity-100 peer-[.filled]:opacity-100 peer-focus:pointer-events-auto peer-[.filled]:pointer-events-auto peer-focus:cursor-pointer peer-[.filled]:cursor-pointer'
 								onClick={ () => setShowPass(!showPass) }
 								onMouseUp={ e => e.preventDefault() }
 								tabIndex="1"
@@ -156,10 +159,10 @@ export const SignIn = () => {
 
 						<button
 							type='submit'
-							className={ `flex items-center justify-center py-2 w-full rounded-lg bg-accent group-valid:hover:brightness-110 transition-[filter_color] duration-100 group-invalid:cursor-not-allowed group-invalid:bg-gray-400 group-invalid:opacity-50 ${ loading ? 'cursor-not-allowed opacity-80 hover:!brightness-100' : '' }` }
+							className={ `flex items-center justify-center py-2 w-full rounded-lg gradient group-valid:hover:brightness-110 transition-[filter,color] duration-100 group-invalid:cursor-not-allowed group-invalid:bg-none group-invalid:bg-gray-400 group-invalid:dark:bg-bunker-900 group-invalid:opacity-50 ${ loading ? 'cursor-not-allowed opacity-80 hover:!brightness-100' : '' }` }
 						>
 
-							<span className='flex items-center relative text-link-water-50 [&_l-ring]:absolute [&_l-ring]:right-[120%]'>
+							<span className='flex items-center relative text-mercury-100 [&_l-ring]:absolute [&_l-ring]:right-[120%]'>
 								{ loading ? <Loading size="16" stroke="1.5" color="var(--bg-color)" /> : null }
 								Iniciar sesión
 							</span>
@@ -169,7 +172,7 @@ export const SignIn = () => {
 					</Form.Footer.Buttons>
 
 					<Form.Footer.Message className='mt-4 text-sm'>
-						¿No tienes una cuenta? <Link to='../register' className='!text-accent hover:underline'>¡Crea una!</Link>
+						¿No tienes una cuenta? <Link to='../register' className='!text-accent-500 hover:underline'>¡Crea una!</Link>
 					</Form.Footer.Message>
 
 				</Form.Footer>

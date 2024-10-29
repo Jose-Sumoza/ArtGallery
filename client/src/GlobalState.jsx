@@ -1,12 +1,14 @@
 import React, { createContext, useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import { PostsAPI, UserAPI, ArtistsAPI } from '@apis';
+import useTheme from '@hooks/useTheme';
 
 const reducer = (current, update) => ({...current, ...update});
 
 export const GlobalState = createContext();
 
 export const DataProvider = ({ children }) => {
+	const { isDark, toggleTheme } = useTheme();
 	const [ modal, setModal ] = useState(null);
 	const [ token, setToken ] = useState(false);
 	const [ logged, setLogged ] = useState(false);
@@ -49,7 +51,8 @@ export const DataProvider = ({ children }) => {
 		loadingModal: [ loadingModal, setLoadingModal ],
 		modal: [ modal, setModal ],
 		search: [ search, setSearch ],
-		token
+		token,
+		useTheme: { isDark, toggleTheme }
 	};
 
 	return (

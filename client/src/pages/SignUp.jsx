@@ -92,7 +92,7 @@ export const SignUp = () => {
 	
 							<Fieldset.Field.Label
 								htmlFor='names'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Nombres
 							</Fieldset.Field.Label>
@@ -102,15 +102,16 @@ export const SignUp = () => {
 								<Fieldset.Field.Container.Input
 									placeholder='P. ej. Pablo Antonio'
 									type='text'
-									name="names"
-									id="names"
+									name='names'
+									id='names'
 									value={ authData.names }
 									onChange={ onChange }
 									minLength={ 3 }
 									maxLength={ 30 }
 									required
 									disabled={ loading }
-									className='!px-4 !py-2 !rounded bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed'
+									autoFocus
+									className='!px-4 !py-2 !rounded dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800'
 								/>
 	
 							</Fieldset.Field.Container>
@@ -121,7 +122,7 @@ export const SignUp = () => {
 
 							<Fieldset.Field.Label
 								htmlFor='lastnames'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Apellidos
 							</Fieldset.Field.Label>
@@ -131,15 +132,15 @@ export const SignUp = () => {
 								<Fieldset.Field.Container.Input
 									placeholder='P. ej. López García'
 									type='text'
-									name="lastnames"
-									id="lastnames"
+									name='lastnames'
+									id='lastnames'
 									value={ authData.lastnames }
 									onChange={ onChange }
 									minLength={ 3 }
 									maxLength={ 20 }
 									required
 									disabled={ loading }
-									className='!px-4 !py-2 !rounded bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed'
+									className='!px-4 !py-2 !rounded dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800'
 								/>
 
 							</Fieldset.Field.Container>
@@ -150,7 +151,7 @@ export const SignUp = () => {
 
 							<Fieldset.Field.Label
 								htmlFor='username'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Nombre de usuario
 							</Fieldset.Field.Label>
@@ -160,15 +161,16 @@ export const SignUp = () => {
 								<Fieldset.Field.Container.Input
 									placeholder='P. ej. pablo_lópez43'
 									type='text'
-									name="username"
-									id="username"
+									name='username'
+									id='username'
+									autoComplete='off'
 									value={ authData.username }
 									onChange={ onChange }
 									minLength={ 3 }
 									maxLength={ 53 }
 									required
 									disabled={ loading }
-									className='!px-4 !py-2 !rounded bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed'
+									className='!px-4 !py-2 !rounded dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800'
 								/>
 
 							</Fieldset.Field.Container>
@@ -183,7 +185,7 @@ export const SignUp = () => {
 
 							<Fieldset.Field.Label
 								htmlFor='email'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Correo electrónico
 							</Fieldset.Field.Label>
@@ -194,13 +196,14 @@ export const SignUp = () => {
 									placeholder='P. ej. pablo@lópez.com'
 									type='email'
 									inputMode='email'
-									name="email"
-									id="email"
+									name='email'
+									id='email'
+									autoComplete='username'
 									value={ authData.email }
 									onChange={ onChange }
 									required
 									disabled={ loading }
-									className='!px-4 !py-2 !rounded bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed'
+									className='!px-4 !py-2 !rounded dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800'
 								/>
 
 							</Fieldset.Field.Container>
@@ -211,7 +214,7 @@ export const SignUp = () => {
 	
 							<Fieldset.Field.Label
 								htmlFor='password'
-								className='font-medium after:content-["_*"] after:text-red-500'
+								className='font-medium after:content-["_*"] after:text-accent-500'
 							>
 								Contraseña
 							</Fieldset.Field.Label>
@@ -219,10 +222,10 @@ export const SignUp = () => {
 							<Fieldset.Field.Container onEvents={{ onBlur }} className='flex flex-col !items-start gap-1'>
 	
 								<Fieldset.Field.Container.Input
-									className={ `peer ${ authData.password?.length ? 'filled' : '' } !px-4 !py-2 !rounded bg-link-water-100 border border-link-water-200 transition-colors duration-100 select-none focus:border-link-water-400 disabled:opacity-80 disabled:cursor-not-allowed` }
+									className={ `peer ${ authData.password?.length ? 'filled' : '' } !px-4 !py-2 !rounded dark:text-mercury-100 bg-link-water-100 dark:bg-bunker-900/30 border border-link-water-200 dark:border-bunker-800 transition-colors duration-100 select-none focus:border-link-water-400 dark:focus:border-bunker-600 disabled:opacity-80 disabled:cursor-not-allowed placeholder:dark:text-bunker-800` }
 									type={ showPass ? 'text' : 'password' }
-									name="password"
-									id="password"
+									name='password'
+									id='password'
 									placeholder=" "
 									value={ authData.password }
 									onChange={ onChange }
@@ -231,10 +234,11 @@ export const SignUp = () => {
 									required
 									ref={ passwordRef }
 									disabled={ loading }
+									autoComplete='new-password'
 								/>
 	
 								<div
-									className='input__showPassword flex items-center justify-center absolute right-0 w-14 h-full text-primary opacity-0 pointer-events-none transition-opacity duration-100 select-none peer-focus:opacity-100 peer-[.filled]:opacity-100 peer-focus:pointer-events-auto peer-[.filled]:pointer-events-auto peer-focus:cursor-pointer peer-[.filled]:cursor-pointer'
+									className='input__showPassword flex items-center justify-center absolute right-0 w-14 h-full text-primary dark:text-bunker-800 opacity-0 pointer-events-none transition-opacity duration-100 select-none peer-focus:opacity-100 peer-[.filled]:opacity-100 peer-focus:pointer-events-auto peer-[.filled]:pointer-events-auto peer-focus:cursor-pointer peer-[.filled]:cursor-pointer'
 									onClick={ () => setShowPass(!showPass) }
 									onMouseUp={ e => e.preventDefault() }
 									tabIndex="1"
@@ -255,7 +259,7 @@ export const SignUp = () => {
 
 						<button
 							type='submit'
-							className={ `flex items-center justify-center py-2 w-full rounded bg-accent group-valid:hover:brightness-110 transition-[filter_color] duration-100 group-invalid:cursor-not-allowed group-invalid:bg-gray-400 group-invalid:opacity-50 ${ loading ? 'cursor-not-allowed opacity-80 hover:!brightness-100' : '' }` }
+							className={ `flex items-center justify-center py-2 w-full rounded gradient group-valid:hover:brightness-110 transition-[filter,color] duration-100 group-invalid:cursor-not-allowed group-invalid:bg-none group-invalid:bg-gray-400 group-invalid:dark:bg-bunker-900 group-invalid:opacity-50 ${ loading ? 'cursor-not-allowed opacity-80 hover:!brightness-100' : '' }` }
 						>
 
 							<span className='flex items-center relative text-link-water-50 [&_l-ring]:absolute [&_l-ring]:right-[120%]'>
@@ -268,7 +272,7 @@ export const SignUp = () => {
 					</Form.Footer.Buttons>
 
 					<Form.Footer.Message className='mt-4 text-sm'>
-						¿Tienes una cuenta? <Link to='../login' className='!text-accent hover:underline'>¡Inicia sesión!</Link>
+						¿Tienes una cuenta? <Link to='../login' className='!text-accent-500 hover:underline'>¡Inicia sesión!</Link>
 					</Form.Footer.Message>
 
 				</Form.Footer>

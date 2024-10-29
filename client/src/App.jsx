@@ -71,27 +71,31 @@ const AppLayout = () => {
 	return (
 		<DataProvider>
 			<ScrollToTop>
-				<Toaster position='bottom-right' />
+
+				<Toaster
+					position='bottom-right'
+					toastOptions={{
+						className: 'text-primary dark:text-mercury-100 bg-white dark:bg-bunker-900'
+					}}
+				/>
+
 				<Header />
+
 				<div
-					className={ `flex flex-1 text-primary mx-auto w-full min-h-screen ${ pathname.split('/')[1] === 'posts' ? 'max-w-[75rem]' : 'max-w-[66rem]' }  selection:bg-accent selection:text-primary px-4 pt-16 md:pt-10 lg:px-10` }
+					className={ `flex flex-1 text-primary dark:text-mercury-100 mx-auto w-full min-h-screen ${ pathname.split('/')[1] === 'posts' ? 'max-w-[75rem]' : 'max-w-[66rem]' } px-4 pt-8 lg:px-10` }
 				>
 					<CustomOutlet key={ pathname } />
 				</div>
+
 				<Footer />
+
 				<Tooltip
-					key={ pathname }
+					key={ location.key }
 					id="my-tooltip"
-					style={{
-						padding: '.5rem',
-						fontSize: '80%',
-						color: 'var(--bg-color)',
-						backgroundColor: 'var(--color-primary)',
-						zIndex: '9999'
-					}}
 					delayShow={ 500 }
 					opacity={ 1 }
 				/>
+
 			</ScrollToTop>
 		</DataProvider>
 	);

@@ -9,7 +9,7 @@
 			"@icons": [ "./src/assets/icons/index" ],
 			"@components/*": [ "./src/components/*" ],
 			"@consts/*": [ "./src/consts/*" ],
-			"@hooks": [ "./src/hooks/index" ],
+			"@hooks/*": [ "./src/hooks/*" ],
 			"@pages": [ "./src/pages/index" ],
 			"@sections": [ "./src/sections/index" ]
 		}

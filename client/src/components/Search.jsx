@@ -6,7 +6,7 @@ import { Search as SearchIcon, ArrowDown } from '@icons';
 const QUERY_TYPE_LIST = [
 	{
 		label: 'post',
-		content: "Colecciones"
+		content: "Obras"
 	},
 	{
 		label: 'artist',
@@ -56,10 +56,10 @@ const SearchType = ({ controllers }) => {
 	return (
 		<button 
 			onClick={ handleOpen }
-			className='relative py-2 min-w-40 h-full outline-none bg-transparent'
+			className='relative py-2 min-w-32 h-full outline-none bg-transparent'
 		>
 
-			<span className={ `flex items-center justify-between px-4 w-full h-full rounded-r-lg transition-colors duration-100 gap-2` }>
+			<span className={ `flex items-center justify-between px-4 w-full h-full text-primary dark:text-bunker-400 gap-2` }>
 
 				{ QUERY_TYPE_LIST.find(elem => elem.label === type).content }
 
@@ -67,12 +67,12 @@ const SearchType = ({ controllers }) => {
 
 			</span>
 
-			<ul className={ `${ openType ? 'flex' : 'hidden' } flex-col absolute top-[110%] left-0 w-full rounded-lg bg-white overflow-hidden shadow-md z-10` }>
+			<ul className={ `${ openType ? 'flex' : 'hidden' } flex-col absolute top-[110%] left-0 w-full rounded-lg bg-white dark:bg-bunker-900 overflow-hidden shadow-md z-10` }>
 				{
 					QUERY_TYPE_LIST.map(({ label, content }) =>
 						<span
 							key={ label }
-							className={ `px-4 py-2 w-full text-left cursor-pointer transition-colors duration-100 ${ label === type ? 'bg-link-water-100 !cursor-default' : 'hover:bg-link-water-50' }` }
+							className={ `px-4 py-2 w-full text-primary dark:text-bunker-100 text-left cursor-pointer transition-colors duration-100 ${ label === type ? 'bg-link-water-100 dark:bg-bunker-700 !cursor-default' : 'hover:bg-link-water-50 dark:hover:bg-bunker-800' }` }
 							onClick={ () => typeHandler(label) }
 						>
 							{ content }
@@ -115,18 +115,19 @@ const Search = ({ className = '', id = 'search', ...props }) => {
 	return (
 		<div
 			{ ...props }
-			className={ `flex items-center relative min-w-[28rem] border border-link-water-200 rounded-lg bg-link-water-100 transition-colors duration-100 focus-within:border-link-water-400 [&>svg]:absolute [&>svg]:left-4 [&>svg]:w-6 [&>svg]:text-secondary [&>svg]:pointer-events-none ${ value?.length ? 'bg-transparent' : '' } ${ className }` }
+			className={ `flex items-center relative min-w-[28rem] border-2 border-link-water-200 dark:border-bunker-800 rounded-lg bg-link-water-100 dark:bg-transparent transition-colors duration-100 focus-within:border-accent-500 [&>svg]:absolute [&>svg]:left-4 [&>svg]:w-6 [&>svg]:text-secondary [&>svg]:dark:text-bunker-800 [&>svg]:pointer-events-none ${ value?.length ? 'bg-transparent' : '' } ${ className }` }
 		>
 
-			<SearchIcon />
+			<SearchIcon className='stroke-2' />
 
 			<input
-				className='py-2 pl-14 pr-4 w-full outline-none text-primary font-medium bg-transparent placeholder:text-secondary [&:not(:placeholder-shown)]:bg-transparent'
+				className='py-2 pl-14 pr-4 w-full outline-none text-primary dark:text-mercury-100 font-medium bg-transparent placeholder:text-bunker-800 [&:not(:placeholder-shown)]:bg-transparent'
 				type='search'
 				inputMode='search'
 				name='search'
 				id={ id }
 				placeholder='Buscar'
+				autoComplete='off'
 				value={ value }
 				onChange={ handleInput }
 			/>
