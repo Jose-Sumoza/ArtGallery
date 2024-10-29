@@ -37,15 +37,15 @@ const limit = pLimit(1);
 const validUsername = v => /^[0-9a-zA-ZÁÉÍÓÚáéíóúñÑ_-]+$/.test(v);
 
 const igUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)/;
-const igUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([A-Za-z0-9-_.]+)$/i;
+const igUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([0-9a-zA-Z_.]+)$/i;
 const igUsernameRegex = /^[0-9a-zA-Z_.]+$/;
 
 const ttkUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com/;
-const ttkUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com\/([A-Za-z0-9-_.]+)$/i;
+const ttkUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com\/@([0-9a-zA-Z_.]+)$/i;
 const ttkUsernameRegex = /^[0-9a-zA-Z_.]+$/;
 
 const fbUrlRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))/;
-const fbUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))\/(?!$)(?:(?:\w)*#!\/)?(?:pages\/|pg\/)?(?:photo\.php\?fbid=)?(?:[\w\-]*\/)*?(?:\/)?(profile\.php\?id=[^\/?&\s]*|[^\/?&\s]*)?(?:\/|&|\?)?.*/;
+const fbUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))\/(?!$)(?:(?:\w)*#!\/)?(?:pages\/|pg\/)?(?:photo\.php\?fbid=)?(?:[\w\-]*\/)*?(?:\/)?(profile\.php\?id=[^\/?&\s]*|[0-9a-zA-Z.]*)?(?:\/|&|\?)?$/;
 const fbUsernameRegex = /^[0-9a-zA-Z.]+$/;
 
 const ttUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com/;
@@ -570,9 +570,9 @@ const userCtrl = {
 
 							parsedContacts.instagram =
 								isIgUrl(value) && isIgUrlValid(value) ?
-									`https://www.instagram.com/${ value.match(igUrlValidRegex)[1] }`
+									`https://www.instagram.com/${ value.match(igUrlValidRegex)[1].toLowerCase() }`
 								:
-									`https://www.instagram.com/${ value }`;
+									`https://www.instagram.com/${ value.toLowerCase() }`;
 						};
 						
 						if (contact === 'tiktok' && value.length) {
@@ -614,9 +614,9 @@ const userCtrl = {
 
 							parsedContacts.tiktok =
 								isTTkUrl(value) && isTTkUrlValid(value) ?
-									`https://www.tiktok.com/${ value.match(ttkUrlValidRegex)[1] }`
+									`https://www.tiktok.com/@${ value.match(ttkUrlValidRegex)[1].toLowerCase() }`
 								:
-									`https://www.tiktok.com/${ value }`;
+									`https://www.tiktok.com/@${ value.toLowerCase() }`;
 						};
 						
 						if (contact === 'facebook' && value.length) {
@@ -684,9 +684,9 @@ const userCtrl = {
 
 							parsedContacts.twitter =
 								isTtUrl(value) && isTtUrlValid(value) ?
-									`https://www.twitter.com/${ value.match(ttUrlValidRegex)[1] }`
+									`https://www.twitter.com/${ value.match(ttUrlValidRegex)[1].toLowerCase() }`
 								:
-									`https://www.twitter.com/${ value }`;
+									`https://www.twitter.com/${ value.toLowerCase() }`;
 						};
 
 						if (contact === 'email' && value.length) {

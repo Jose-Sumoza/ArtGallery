@@ -84,6 +84,7 @@ const RecentPosts = ({ useTheme, postsAPI }) => {
 							data={ posts.content.docs }
 							type='post'
 							title
+							subtitle
 							author
 							className='grid lg:grid-cols-4 gap-8'
 						/>

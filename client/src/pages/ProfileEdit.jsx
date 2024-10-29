@@ -10,7 +10,7 @@ import Form from '@components/Form';
 import Loading from '@components/Loading';
 import MissingPhoto from '@/components/MissingPhoto';
 import Photo from "@components/Photo";
-import { ArrowUp, ExclamationCircle, Facebook, FloppyDisk, Instagram, Settings, Share, TikTok, User, View, ViewOff, WhatsApp } from '@icons';
+import { ArrowUp, ExclamationCircle, FloppyDisk, Settings, Share, User, View, ViewOff } from '@icons';
 import 'react-international-phone/style.css';
 
 const phoneUtil = PhoneNumberUtil.getInstance();
@@ -29,11 +29,11 @@ const igUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|in
 const igUsernameRegex = /^[0-9a-zA-Z_.]+$/;
 
 const ttkUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com/;
-const ttkUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com\/([0-9a-zA-Z_.]+)$/i;
+const ttkUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com\/@([0-9a-zA-Z_.]+)$/i;
 const ttkUsernameRegex = /^[0-9a-zA-Z_.]+$/;
 
 const fbUrlRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))/;
-const fbUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))\/(?!$)(?:(?:\w)*#!\/)?(?:pages\/|pg\/)?(?:photo\.php\?fbid=)?(?:[\w\-]*\/)*?(?:\/)?(profile\.php\?id=[^\/?&\s]*|[^\/?&\s]*)?(?:\/|&|\?)?.*/;
+const fbUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))\/(?!$)(?:(?:\w)*#!\/)?(?:pages\/|pg\/)?(?:photo\.php\?fbid=)?(?:[\w\-]*\/)*?(?:\/)?(profile\.php\?id=[^\/?&\s]*|[0-9a-zA-Z.]*)?(?:\/|&|\?)?$/;
 const fbUsernameRegex = /^[0-9a-zA-Z.]+$/;
 
 const ttUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com/;
