@@ -222,7 +222,7 @@ export const PostDetail = () => {
 
 			<section className='flex flex-col lg:flex-row items-center lg:items-start justify-start pb-16 w-full border-b-link-water-100 dark:border-b-bunker-900/50 border-b gap-16'>
 
-				<div className='hidden dark:block absolute inset-0 left-0 lg:w-2/3 h-[70%] lg:h-[105%] blur-3xl overflow-hidden opacity-[.2] -z-10'>
+				<div className='hidden dark:block absolute inset-0 left-0 lg:w-2/3 h-[30%] lg:h-[41%] blur-3xl overflow-hidden opacity-[.2] -z-10'>
 					<figure className='w-full h-full'>
 						<img
 							src={ img.url }

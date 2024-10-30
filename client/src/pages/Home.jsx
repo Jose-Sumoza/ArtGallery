@@ -8,7 +8,7 @@ const Banner = () => {
 	return (
 		<section>
 			
-			<div className='hidden dark:block absolute inset-0 left-0 w-full h-[105%] lg:h-[150%] blur-3xl overflow-hidden opacity-50 -z-10'>
+			<div className='hidden dark:block absolute top-0 left-0 w-full h-[50%] lg:h-[65%] blur-3xl overflow-hidden opacity-50 -z-10'>
 				<figure className='w-full h-full'>
 					<img
 						src={ BANNER.imgUrl }

@@ -8,8 +8,34 @@
 		@apply dark:bg-bunker-950;
 	}
 	body {
+		@apply relative;
 		@apply selection:text-mercury-100;
 		@apply selection:bg-accent-500;
+		@apply after:content-none;
+		@apply after:dark:!content-[""];
+		@apply after:absolute;
+		@apply after:inset-0;
+		@apply after:bg-[url(/noise.png)];
+		@apply after:[background-size:128px];
+		@apply after:[background-repeat:repeat];
+		@apply after:pointer-events-none;
+		@apply after:-z-[9999];
+	}
+	#root {
+		@apply relative;
+		@apply after:content-none;
+		@apply after:dark:!content-[""];
+		@apply after:absolute;
+		@apply after:bottom-0;
+		@apply after:w-screen;
+		@apply after:h-[40vh];
+		@apply lg:after:h-[90vh];
+		@apply after:translate-y-1/2;
+		@apply after:[background-image:linear-gradient(to_right,#6e00ff,#2a00ff)];
+		@apply after:[mask-image:radial-gradient(90%_80%_at_50%_50%,black,transparent_60%)];
+		@apply lg:after:[mask-image:radial-gradient(black,transparent_60%)];
+		@apply after:-z-[1];
+		@apply overflow-clip;
 	}
 	#my-tooltip {
 		@apply hidden;
@@ -26,25 +52,21 @@
 	@supports selector(::-webkit-scrollbar) {
 		::-webkit-scrollbar-thumb {
 			@apply bg-bunker-300 dark:bg-bunker-700;
-			/* background-color: var(--color-primary); */
 		}
 	
 		::-webkit-scrollbar-thumb:active {
 			@apply bg-bunker-200 dark:bg-bunker-600;
-			/* background-color: var(--p-color) */
 		}
 	
 		::-webkit-scrollbar-track,
 		::-webkit-scrollbar-corner {
 			@apply bg-mercury-50 dark:bg-bunker-950;
-			/* background-color: var(--skills-background-color-darker); */
 		}
 	}
 	
 	@supports not selector(::-webkit-scrollbar) {
 		* {
 			@apply dark:[scrollbar-color:theme(accentColor.bunker.700)_transparent];
-			/* scrollbar-color: var(--color-primary) transparent; */
 		}
 	}
 }
@@ -120,9 +142,9 @@ html {
 }
 
 body {
-	overflow-x: hidden;
 	padding-top: var(--header-height);
 	min-width: 100vw;
+	overflow-x: hidden;
 }
 
 #root {
@@ -138,24 +160,13 @@ body {
 
 	::-webkit-scrollbar-thumb {
 		border-radius: 10px;
-		/* background-color: var(--color-primary); */
 		border: 3px solid transparent;
 		background-clip: content-box;
-	}
-
-	::-webkit-scrollbar-thumb:active {
-		/* background-color: var(--p-color) */
-	}
-
-	::-webkit-scrollbar-track,
-	::-webkit-scrollbar-corner {
-		/* background-color: var(--skills-background-color-darker); */
 	}
 }
 
 @supports not selector(::-webkit-scrollbar) {
 	* {
-		/* scrollbar-color: var(--color-primary) transparent; */
 		scrollbar-width: thin;
 	}
 }

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import MissingPhoto from "@components/MissingPhoto";
 import Photo from '@components/Photo';
 
-const Card = ({ data, type }) => {
+const Card = ({ data }) => {
 	const { image, title, subtitle } = data;
 
 	return (
@@ -14,7 +14,7 @@ const Card = ({ data, type }) => {
 
 			{
 				title || subtitle ?
-					<div className="flex flex-col p-4 h-20 bg-white dark:bg-bunker-900/40 gap-1">
+					<div className="flex flex-col p-4 h-20 bg-white dark:bg-bunker-925 gap-1">
 						{ title ? <h4 className='font-medium line-clamp-1'>{ title }</h4> : null }
 						{ subtitle ? <h5 className='text-sm text-secondary dark:text-bunker-500 capitalize line-clamp-1'>{ subtitle }</h5> : null }
 					</div>
@@ -42,7 +42,7 @@ const PostCard = ({ doc, title, subtitle, author }) => {
 				data-tooltip-id='my-tooltip'
 				aria-label={ `${ doc.title }${ author ? ` por ${ doc.author.username }` : '' }` }
 			>
-				<Card data={ data } type='post'  />
+				<Card data={ data } />
 			</Link>
 		</li>
 	);
@@ -73,7 +73,7 @@ const ArtistCard = ({ doc, title, subtitle }) => {
 				data-tooltip-id='my-tooltip'
 				aria-label={ doc.username }
 			>
-				<Card data={ data } type='artist' />
+				<Card data={ data } />
 			</Link>
 		</li>
 	)

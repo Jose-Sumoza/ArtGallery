@@ -1,4 +1,6 @@
-import 'ldrs/ring';
+import { ring } from 'ldrs'
+
+ring.register();
 
 const Loading = ({ size, stroke, color }) => {
 	return (
