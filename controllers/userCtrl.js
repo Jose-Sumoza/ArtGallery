@@ -3,6 +3,7 @@ const pLimit = require('p-limit');
 const Users = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { instagram, tiktok, facebook, twitter } = require('../consts/validations');
 
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
@@ -36,37 +37,21 @@ const limit = pLimit(1);
 
 const validUsername = v => /^[0-9a-zA-ZÁÉÍÓÚáéíóúñÑ_-]+$/.test(v);
 
-const igUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)/;
-const igUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([0-9a-zA-Z_.]+)$/i;
-const igUsernameRegex = /^[0-9a-zA-Z_.]+$/;
+const isIgUrl = v => instagram.url.test(v);
+const isIgUrlValid = v => instagram.urlValid.test(v);
+const isIgValid = v => instagram.username.test(v);
 
-const ttkUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com/;
-const ttkUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com\/@([0-9a-zA-Z_.]+)$/i;
-const ttkUsernameRegex = /^[0-9a-zA-Z_.]+$/;
+const isTTkUrl = v => tiktok.url.test(v);
+const isTTkUrlValid = v => tiktok.urlValid.test(v);
+const isTTkValid = v => tiktok.username.test(v);
 
-const fbUrlRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))/;
-const fbUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))\/(?!$)(?:(?:\w)*#!\/)?(?:pages\/|pg\/)?(?:photo\.php\?fbid=)?(?:[\w\-]*\/)*?(?:\/)?(profile\.php\?id=[^\/?&\s]*|[0-9a-zA-Z.]*)?(?:\/|&|\?)?$/;
-const fbUsernameRegex = /^[0-9a-zA-Z.]+$/;
+const isFbUrl = v => facebook.url.test(v);
+const isFbUrlValid = v => facebook.urlValid.test(v);
+const isFbValid = v => facebook.username.test(v);
 
-const ttUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com/;
-const ttUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com\/([0-9a-zA-Z_]+)$/i;
-const ttUsernameRegex = /^[0-9a-zA-Z_]+$/;
-
-const isIgUrl = v => igUrlRegex.test(v);
-const isIgUrlValid = v => igUrlValidRegex.test(v);
-const isIgValid = v => igUsernameRegex.test(v);
-
-const isTTkUrl = v => ttkUrlRegex.test(v);
-const isTTkUrlValid = v => ttkUrlValidRegex.test(v);
-const isTTkValid = v => ttkUsernameRegex.test(v);
-
-const isFbUrl = v => fbUrlRegex.test(v);
-const isFbUrlValid = v => fbUrlValidRegex.test(v);
-const isFbValid = v => fbUsernameRegex.test(v);
-
-const isTtUrl = v => ttUrlRegex.test(v);
-const isTtUrlValid = v => ttUrlValidRegex.test(v);
-const isTtValid = v => ttUsernameRegex.test(v);
+const isTtUrl = v => twitter.url.test(v);
+const isTtUrlValid = v => twitter.urlValid.test(v);
+const isTtValid = v => twitter.username.test(v);
 
 const fieldHandler = {
 	user: ([ field, value ]) => {
@@ -570,7 +555,7 @@ const userCtrl = {
 
 							parsedContacts.instagram =
 								isIgUrl(value) && isIgUrlValid(value) ?
-									`https://www.instagram.com/${ value.match(igUrlValidRegex)[1].toLowerCase() }`
+									`https://www.instagram.com/${ value.match(instagram.urlValid)[1].toLowerCase() }`
 								:
 									`https://www.instagram.com/${ value.toLowerCase() }`;
 						};
@@ -614,7 +599,7 @@ const userCtrl = {
 
 							parsedContacts.tiktok =
 								isTTkUrl(value) && isTTkUrlValid(value) ?
-									`https://www.tiktok.com/@${ value.match(ttkUrlValidRegex)[1].toLowerCase() }`
+									`https://www.tiktok.com/@${ value.match(tiktok.urlValid)[1].toLowerCase() }`
 								:
 									`https://www.tiktok.com/@${ value.toLowerCase() }`;
 						};
@@ -646,7 +631,7 @@ const userCtrl = {
 
 							parsedContacts.facebook =
 								isFbUrl(value) && isFbUrlValid(value) ?
-									`https://www.facebook.com/${ value.match(fbUrlValidRegex)[1] }`
+									`https://www.facebook.com/${ value.match(facebook.urlValid)[1] }`
 								:
 									`https://www.facebook.com/${ value }`;
 						};
@@ -684,7 +669,7 @@ const userCtrl = {
 
 							parsedContacts.twitter =
 								isTtUrl(value) && isTtUrlValid(value) ?
-									`https://www.twitter.com/${ value.match(ttUrlValidRegex)[1].toLowerCase() }`
+									`https://www.twitter.com/${ value.match(twitter.urlValid)[1].toLowerCase() }`
 								:
 									`https://www.twitter.com/${ value.toLowerCase() }`;
 						};

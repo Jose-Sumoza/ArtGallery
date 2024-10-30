@@ -10,6 +10,7 @@ import Form from '@components/Form';
 import Loading from '@components/Loading';
 import MissingPhoto from '@/components/MissingPhoto';
 import Photo from "@components/Photo";
+import VALIDATIONS from '@consts/validations';
 import { ArrowUp, ExclamationCircle, FloppyDisk, Settings, Share, User, View, ViewOff } from '@icons';
 import 'react-international-phone/style.css';
 
@@ -24,37 +25,21 @@ const isPhoneValid = phone => {
 	}
 };
 
-const igUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)/;
-const igUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?(?:instagram\.com|instagr\.am)\/([0-9a-zA-Z_.]+)$/i;
-const igUsernameRegex = /^[0-9a-zA-Z_.]+$/;
+const isIgUrl = v => VALIDATIONS.instagram.url.test(v);
+const isIgUrlValid = v => VALIDATIONS.instagram.urlValid.test(v);
+const isIgValid = v => VALIDATIONS.instagram.username.test(v);
 
-const ttkUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com/;
-const ttkUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?tiktok\.com\/@([0-9a-zA-Z_.]+)$/i;
-const ttkUsernameRegex = /^[0-9a-zA-Z_.]+$/;
+const isTTkUrl = v => VALIDATIONS.tiktok.url.test(v);
+const isTTkUrlValid = v => VALIDATIONS.tiktok.urlValid.test(v);
+const isTTkValid = v =>VALIDATIONS. tiktok.username.test(v);
 
-const fbUrlRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))/;
-const fbUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:(?:www|m|mobile|touch|mbasic).)?(?:facebook\.com|fb(?:\.me|\.com))\/(?!$)(?:(?:\w)*#!\/)?(?:pages\/|pg\/)?(?:photo\.php\?fbid=)?(?:[\w\-]*\/)*?(?:\/)?(profile\.php\?id=[^\/?&\s]*|[0-9a-zA-Z.]*)?(?:\/|&|\?)?$/;
-const fbUsernameRegex = /^[0-9a-zA-Z.]+$/;
+const isFbUrl = v => VALIDATIONS.facebook.url.test(v);
+const isFbUrlValid = v => VALIDATIONS.facebook.urlValid.test(v);
+const isFbValid = v => VALIDATIONS.facebook.username.test(v);
 
-const ttUrlRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com/;
-const ttUrlValidRegex = /^(?:(?:https|http):\/\/)?(?:www\.)?twitter\.com\/([0-9a-zA-Z_]+)$/i;
-const ttUsernameRegex = /^[0-9a-zA-Z_]+$/;
-
-const isIgUrl = v => igUrlRegex.test(v);
-const isIgUrlValid = v => igUrlValidRegex.test(v);
-const isIgValid = v => igUsernameRegex.test(v);
-
-const isTTkUrl = v => ttkUrlRegex.test(v);
-const isTTkUrlValid = v => ttkUrlValidRegex.test(v);
-const isTTkValid = v => ttkUsernameRegex.test(v);
-
-const isFbUrl = v => fbUrlRegex.test(v);
-const isFbUrlValid = v => fbUrlValidRegex.test(v);
-const isFbValid = v => fbUsernameRegex.test(v);
-
-const isTtUrl = v => ttUrlRegex.test(v);
-const isTtUrlValid = v => ttUrlValidRegex.test(v);
-const isTtValid = v => ttUsernameRegex.test(v);
+const isTtUrl = v => VALIDATIONS.twitter.url.test(v);
+const isTtUrlValid = v => VALIDATIONS.twitter.urlValid.test(v);
+const isTtValid = v => VALIDATIONS.twitter.username.test(v);
 
 const ProfileTab = ({ state }) => {
 	const { userAPI: { user: [ { user }, setUserState ], updateUser } } = state;

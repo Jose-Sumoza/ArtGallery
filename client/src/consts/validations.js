@@ -21,4 +21,4 @@ const VALIDATIONS = {
 	}
 };
 
-module.exports = VALIDATIONS;
+export default VALIDATIONS;
