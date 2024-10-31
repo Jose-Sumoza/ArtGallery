@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const cors = require("cors");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 const path = require("path");
 const userRouter = require('../routes/userRouter');
 const artistRouter = require('../routes/artistRouter');
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(cookieParser());
+app.use(helmet());
 
 // CONNECT TO MONGODB
 const URI = process.env.MONGODB_URL;

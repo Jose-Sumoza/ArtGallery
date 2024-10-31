@@ -334,9 +334,9 @@ const userCtrl = {
 			const refreshToken = createRefreshToken({ id: user._id });
 
 			res.cookie('e229146b1984cd62e322005c53468c', refreshToken, {
-				httpOnly: false,
-				// secure: true,
-				sameSite: 'lax',
+				httpOnly: process.env.NODE_ENV === 'production' ? true : false,
+				secure: process.env.NODE_ENV === 'production' ? true : false,
+				sameSite: process.env.NODE_ENV === 'production' ? 'Strict' : 'Lax',
 				path: '/user/e229146b1984cd62e322005c53468c',
 				expires: new Date(Date.now() + (400 * 24 * 3600000))
 			});
