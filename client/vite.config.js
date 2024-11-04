@@ -18,7 +18,8 @@ export default defineConfig({
 				"img-src": [
 					"'self'",
 					"https://res.cloudinary.com",
-					"https://cdnjs.cloudflare.com/ajax/libs/twemoji/"
+					"https://cdnjs.cloudflare.com/ajax/libs/twemoji/",
+					"blob:"
 				],
 				"style-src": [ "'self'" ],
 				"script-src-elem": [ "'self'" ],

@@ -57,7 +57,6 @@ const POST = {
 		"Vectorial",
 		"3D",
 		"Pixel",
-		"GIF",
 		"Render",
 		"Animación",
 		"Realidad Virtual",

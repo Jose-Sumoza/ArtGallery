@@ -24,7 +24,13 @@ export const DataProvider = ({ children }) => {
 			const res = await axios.get('/user/e229146b1984cd62e322005c53468c');
 			const { data: { content: accessToken, success } } = res;
 
-			if (success) setToken(accessToken);
+			if (!success) {
+				localStorage.clear();
+				window.location.href = '/';
+				return;
+			};
+				
+			setToken(accessToken);
 		} catch (err) {
 			const { response: { data: { content: msg } } } = err;
 			console.log(msg);
