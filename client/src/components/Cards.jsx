@@ -16,7 +16,7 @@ const Card = ({ data }) => {
 				title || subtitle ?
 					<div className="flex flex-col p-4 h-20 bg-white dark:bg-bunker-925 gap-1">
 						{ title ? <h4 className='font-medium line-clamp-1'>{ title }</h4> : null }
-						{ subtitle ? <h5 className='text-sm text-secondary dark:text-bunker-500 capitalize line-clamp-1'>{ subtitle }</h5> : null }
+						{ subtitle ? <h5 className='text-sm text-secondary dark:text-bunker-500 line-clamp-1'>{ subtitle }</h5> : null }
 					</div>
 				:
 					null
@@ -91,7 +91,7 @@ const Cards = ({ className = '', data, type, title, subtitle, author, ...props }
 			{ ...props }
 		>
 			{
-				data.map(doc => {
+				data?.map(doc => {
 					const CardWrapper = type === 'post' ?
 						<CARD_TYPE.Post key={ doc._id } doc={ doc } title={ title } subtitle={ subtitle } author={ author } />
 					:

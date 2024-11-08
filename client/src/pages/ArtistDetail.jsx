@@ -75,6 +75,23 @@ export const ArtistDetail = () => {
 		<main className='flex flex-col w-full gap-10'>
 
 			<section className='flex flex-col items-center w-full gap-6'>
+			
+				{
+					photo?.url ?
+						<div className='hidden dark:block absolute top-0 left-0 w-full h-[50%] lg:h-[50%] [mask-image:linear-gradient(to_bottom,black_0%,transparent_100%)] overflow-hidden opacity-50 lg:opacity-30 -z-10'>
+							<figure className='w-full h-full'>
+								<img
+									src={ photo.url }
+									draggable={ false }
+									onContextMenu={ e => e.preventDefault() }
+									className='w-full h-full object-cover blur-3xl'
+								/>
+							</figure>
+						</div>
+					:
+						null
+				}
+
 
 				<figure>
 					{

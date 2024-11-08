@@ -19,7 +19,8 @@ const artistCtrl = {
 			const [ artist ] = await Users.aggregate([
 				{
 					$match: {
-						username: artist_id
+						username: artist_id,
+						role: 1
 					}
 				},
 				{
@@ -91,12 +92,20 @@ const artistCtrl = {
 			const [ artists ] = await Users.aggregate([
 				{
 					$match: {
-						$or: [
-							{ $text: { $search: search, $caseSensitive: false } },
-							{ names: { $regex: search, $options: 'i' } },
-							{ lastnames: { $regex: search, $options: 'i' } },
-							{ username: { $regex: search, $options: 'i' } }
-						]
+						role: 1,
+						...(
+							search ?
+								{
+									$or: [
+										{ $text: { $search: search, $caseSensitive: false } },
+										// { names: { $regex: search, $options: 'i' } },
+										// { lastnames: { $regex: search, $options: 'i' } },
+										// { username: { $regex: search, $options: 'i' } }
+									]
+								}
+							:
+								{}
+						)
 					}
 				},
 				{

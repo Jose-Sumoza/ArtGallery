@@ -8,13 +8,13 @@ const Banner = () => {
 	return (
 		<section>
 			
-			<div className='hidden dark:block absolute top-0 left-0 w-full h-[50%] lg:h-[65%] blur-3xl overflow-hidden opacity-50 -z-10'>
+			<div className='hidden dark:block absolute top-0 left-0 w-full h-[50%] lg:h-[55%] [mask-image:linear-gradient(to_bottom,black_0%,transparent_100%)] overflow-hidden opacity-50 -z-10'>
 				<figure className='w-full h-full'>
 					<img
 						src={ BANNER.imgUrl }
 						draggable={ false }
 						onContextMenu={ e => e.preventDefault() }
-						className='w-full h-full object-cover [mask-image:linear-gradient(to_bottom,black_30%,transparent_90%)]'
+						className='w-full h-full object-cover blur-3xl'
 					/>
 				</figure>
 			</div>

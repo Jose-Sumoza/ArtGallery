@@ -56,7 +56,7 @@ export const Search = ({ state }) => {
 		</div>
 	);
 
-	if (API_HANDLER.data?.status === 400) return <ErrorMessage msg={ API_HANDLER.data.content }/>
+	if (API_HANDLER.data?.status !== 200) return <ErrorMessage msg={ API_HANDLER.data.content }/>
 
 	return (
 		<div className="flex flex-col gap-8">

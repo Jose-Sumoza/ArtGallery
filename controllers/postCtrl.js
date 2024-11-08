@@ -269,16 +269,29 @@ const postCtrl = {
 			const page = parseInt(queries?.page) || 1;
 			const sort = SORT[queries?.sort] || -1;
 			const search = queries?.search?.trim() || "";
-			const tagSearch = queries?.search?.length ? queries?.search.split(" ").map(t => new RegExp(`^${ t }`, 'i')) : [];
+			const tagSearch = queries?.search?.length ? queries?.search.split(" ") : [];
 
 			const [ posts ] = await Posts.aggregate([
 				{
 					$match: {
-						$or: [
-							{ $text: { $search: search, $caseSensitive: false } },
-							{ title: { $regex: search, $options: 'i' } },
-							{ tags: { $in: tagSearch } }
-						]
+						...(
+							search ?
+								{
+									$or: [
+										{ $text: { $search: search, $caseSensitive: false } },
+										// { title: { $regex: search, $options: 'i' } },
+										// { tags: { $all: tagSearch.map(t => new RegExp(`^${ t }`, 'i')) } },
+										// {
+										// 	$and: [
+										// 		{ title: { $regex: search.split(' ').filter(t => !POST.tags.some(tg => t.toLowerCase() === tg.toLowerCase())).join(' '), $options: 'i' } },
+										// 		{ tags: { $all: tagSearch.filter(t => POST.tags.some(tg => t.toLowerCase() === tg.toLowerCase())).map(t => new RegExp(`${ t }`, 'i')) } }
+										// 	]
+										// }
+									]
+								}
+							:
+								{}
+						)
 					}
 				},
 				{
@@ -360,7 +373,7 @@ const postCtrl = {
 			return res.json({
 				status: 500,
 				success: false,
-				content: message
+				content: "No hay obras disponibles."
 			});
 		};
 	},

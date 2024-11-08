@@ -74,75 +74,98 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 	];
 
 	return (
-		<section className='flex flex-col absolute top-[90%] right-2 lg:-right-8 p-2 min-w-72 rounded-lg bg-white dark:bg-bunker-800 shadow-lg z-50' ref={ ref }>
+		<section className='absolute top-[90%] right-2 lg:-right-8 p-2 min-w-72 rounded-lg bg-white dark:bg-bunker-925 shadow-lg z-50 overflow-hidden' ref={ ref }>
 
-			<header className='mx-4 mt-4'>
-				<div className='flex items-center gap-2'>
 
-					<Link
-						to={ `artists/${ username }` }
-						aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
-						onClick={ () => setOpen(false) }
-					>
-						<UserPhoto photo={ photo } />
-					</Link>
-
-					<div className='flex flex-col justify-start h-full text-primary dark:text-bunker-100'>
-
+			<div className='flex flex-col w-full h-full '>
+				
+				<header className='mx-4 mt-4'>
+	
+					<div className='flex items-center gap-2'>
+	
 						<Link
 							to={ `artists/${ username }` }
-							className='text-sm font-bold hover:text-accent-500 transition-colors duration-100'
+							aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
 							onClick={ () => setOpen(false) }
 						>
-							<h2 className='font-semibold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
+							<UserPhoto photo={ photo } />
 						</Link>
-
-						<div className='flex items-center text-sm'>
-
+	
+						<div className='flex flex-col justify-start h-full text-primary dark:text-bunker-100'>
+	
 							<Link
 								to={ `artists/${ username }` }
-								className='opacity-50 hover:opacity-70 transition-opacity duration-100'
+								className='text-sm font-bold hover:text-accent-500 transition-colors duration-100'
 								onClick={ () => setOpen(false) }
 							>
-								Ver perfil
+								<h2 className='font-semibold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
 							</Link>
-
-							<span className="mx-2 bg-primary dark:bg-bunker-100 w-1 h-1 rounded-full opacity-50"></span>
-
-							<Link
-								to='profile/edit'
-								className='opacity-50 hover:opacity-70 transition-opacity duration-100'
-								onClick={ () => setOpen(false) }
-							>
-								Editar perfil
-							</Link>
-
+	
+							<div className='flex items-center text-sm'>
+	
+								<Link
+									to={ `artists/${ username }` }
+									className='opacity-50 hover:opacity-70 transition-opacity duration-100'
+									onClick={ () => setOpen(false) }
+								>
+									Ver perfil
+								</Link>
+	
+								<span className="mx-2 bg-primary dark:bg-bunker-100 w-1 h-1 rounded-full opacity-50"></span>
+	
+								<Link
+									to='profile/edit'
+									className='opacity-50 hover:opacity-70 transition-opacity duration-100'
+									onClick={ () => setOpen(false) }
+								>
+									Editar perfil
+								</Link>
+	
+							</div>
+	
 						</div>
-
+	
 					</div>
+				
+					{
+						photo?.url ?
+							<div className='hidden dark:block absolute top-0 left-0 w-full h-[50%] [mask-image:linear-gradient(to_bottom,black_0%,transparent_100%)] opacity-60 overflow-hidden -z-10'>
+								<figure className='w-full h-full'>
+									<img
+										src={ photo.url }
+										draggable={ false }
+										onContextMenu={ e => e.preventDefault() }
+										className='w-full h-full object-cover blur-2xl'
+									/>
+								</figure>
+							</div>
+						:
+							null
+					}
+	
+				</header>
+	
+				<div className='m-3 h-[2px] bg-gray-200 dark:bg-bunker-700'></div>
+	
+				<ul>
+					{
+						USER_OPTIONS.map(({ path, icon, title, danger, onEvents }) =>
+							<li key={ path } className={ `text-primary dark:text-bunker-100 ${ danger ? 'hover:text-red-600' : '' }` }>
+								<Link
+									to={ path }
+									aria-label={ title }
+									className={ `flex items-center justify-start px-4 py-2 font-medium rounded gap-4 transition-colors duration-150 ${ danger ? 'hover:bg-red-500/5' : 'hover:bg-link-water-100 dark:hover:bg-bunker-900' }` }
+									{ ...onEvents }
+								>
+									{ icon }
+									<span>{ title }</span>
+								</Link>
+							</li>
+						)
+					}
+				</ul>
 
-				</div>
-			</header>
-
-			<div className='m-3 h-[2px] bg-gray-200 dark:bg-bunker-700'></div>
-
-			<ul>
-				{
-					USER_OPTIONS.map(({ path, icon, title, danger, onEvents }) =>
-						<li key={ path } className={ `text-primary dark:text-bunker-100 ${ danger ? 'hover:text-red-600' : '' }` }>
-							<Link
-								to={ path }
-								aria-label={ title }
-								className={ `flex items-center justify-start px-4 py-2 font-medium rounded gap-4 transition-colors duration-150 ${ danger ? 'hover:bg-red-500/10' : 'hover:bg-link-water-100 dark:hover:bg-bunker-600' }` }
-								{ ...onEvents }
-							>
-								{ icon }
-								<span>{ title }</span>
-							</Link>
-						</li>
-					)
-				}
-			</ul>
+			</div>
 
 		</section>
 	);

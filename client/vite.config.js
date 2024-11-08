@@ -8,8 +8,7 @@ export default defineConfig({
 		react(),
 		csp({
 			dev: {
-				run: true,
-				outlierSupport: [ 'tailwind' ], 
+				run: false
 			},
 			policy: {
 				"default-src": [ "'self'" ],
