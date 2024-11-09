@@ -8,6 +8,14 @@ const SORT = {
 	desc: -1
 };
 
+const queryToRegex = query => {
+	try {
+		return new RegExp(`${ query.split(' ').map(w => `(?=.*?\\b${ w })`).join('') }.*`);
+	} catch (error) {
+		return query;
+	};
+};
+
 const artistCtrl = {
 	getById: async (req, res) => {
 		try {
@@ -96,12 +104,21 @@ const artistCtrl = {
 						...(
 							search ?
 								{
-									$or: [
-										{ $text: { $search: search, $caseSensitive: false } },
-										// { names: { $regex: search, $options: 'i' } },
-										// { lastnames: { $regex: search, $options: 'i' } },
-										// { username: { $regex: search, $options: 'i' } }
-									]
+									$expr: {
+										$regexMatch: {
+											input: {
+												$concat: [
+													"$names",
+													" ",
+													"$lastnames",
+													" ",
+													"$username"
+												]
+											},
+											regex: queryToRegex(search),
+											options: 'ix'
+										}
+									}
 								}
 							:
 								{}

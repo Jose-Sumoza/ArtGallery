@@ -122,6 +122,14 @@ const SORT = {
 	desc: -1
 };
 
+const queryToRegex = query => {
+	try {
+		return new RegExp(`${ query.split(' ').map(w => `(?=.*?\\b${ w })`).join('') }.*`);
+	} catch (error) {
+		return query;
+	};
+};
+
 const postCtrl = {
 	getById: async (req, res) => {
 		try {
@@ -269,7 +277,6 @@ const postCtrl = {
 			const page = parseInt(queries?.page) || 1;
 			const sort = SORT[queries?.sort] || -1;
 			const search = queries?.search?.trim() || "";
-			const tagSearch = queries?.search?.length ? queries?.search.split(" ") : [];
 
 			const [ posts ] = await Posts.aggregate([
 				{
@@ -277,17 +284,31 @@ const postCtrl = {
 						...(
 							search ?
 								{
-									$or: [
-										{ $text: { $search: search, $caseSensitive: false } },
-										// { title: { $regex: search, $options: 'i' } },
-										// { tags: { $all: tagSearch.map(t => new RegExp(`^${ t }`, 'i')) } },
-										// {
-										// 	$and: [
-										// 		{ title: { $regex: search.split(' ').filter(t => !POST.tags.some(tg => t.toLowerCase() === tg.toLowerCase())).join(' '), $options: 'i' } },
-										// 		{ tags: { $all: tagSearch.filter(t => POST.tags.some(tg => t.toLowerCase() === tg.toLowerCase())).map(t => new RegExp(`${ t }`, 'i')) } }
-										// 	]
-										// }
-									]
+									$expr: {
+										$regexMatch: {
+											input: {
+												$concat: [
+													"$title",
+													" ",
+													{
+														$reduce: {
+															input: "$tags",
+															initialValue: "",
+															in: {
+																$concat: [
+																	"$$value",
+																	" ",
+																	"$$this"
+																]
+															}
+														}
+													}
+												]
+											},
+											regex: queryToRegex(search),
+											options: "ix"
+										}
+									}
 								}
 							:
 								{}
@@ -369,6 +390,8 @@ const postCtrl = {
 			});
 		} catch (err) {
 			const { message } = err;
+
+			console.log(message);
 
 			return res.json({
 				status: 500,

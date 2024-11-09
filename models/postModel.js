@@ -67,26 +67,5 @@ const postsSchema = new Schema({
 });
 
 postsSchema.index({ title: 'text', tags: 'text' });
-postsSchema.index({ title: 1 });
-postsSchema.index({ tags: 1 });
-
-postsSchema.searchIndex({
-	name: 'title',
-	definition: {
-		mappings: {
-			dynamic: false,
-			fields: {
-				title: {
-					type: 'autocomplete',
-					analyzer: 'lucene.standard',
-					tokenization: 'edgeGram',
-					minGrams: 1,
-					maxGrams: 5,
-					foldDiacritics: true
-				}
-			}
-		}
-	}
-});
 
 module.exports = model('Posts', postsSchema);
