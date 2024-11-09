@@ -1,8 +1,6 @@
 const { Types: { ObjectId } } = require('mongoose');
 const Users = require('../models/userModel');
 
-const isObjectId = v => /^[0-9a-fA-F]{24}$/.test(v);
-
 const SORT = {
 	asc: 1,
 	desc: -1

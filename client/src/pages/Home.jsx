@@ -57,7 +57,7 @@ const RecentPosts = ({ useTheme, postsAPI }) => {
 	const fetchPosts = async () => {
 		const res = await getPosts({ limit: 4 });
 
-		if (!res.success) {
+		if (!res?.success) {
 			setLoading(false);
 			return setPosts(res);
 		};
@@ -106,7 +106,7 @@ const RecentArtists = ({ useTheme, artistsAPI }) => {
 	const fetchArtists = async () => {
 		const res = await getArtists({ limit: 4 });
 
-		if (!res.success) {
+		if (!res?.success) {
 			setLoading(false);
 			return setArtists(res);
 		};

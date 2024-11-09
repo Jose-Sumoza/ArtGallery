@@ -391,8 +391,6 @@ const postCtrl = {
 		} catch (err) {
 			const { message } = err;
 
-			console.log(message);
-
 			return res.json({
 				status: 500,
 				success: false,
