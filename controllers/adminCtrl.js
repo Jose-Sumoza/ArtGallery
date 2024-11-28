@@ -496,6 +496,7 @@ const adminCtrl = {
 
 			doc.addSVG(popularTagsChart.replace(svgSizes, ''), 0, doc.y, {
 				assumePt: true,
+				width: doc.page.width - 150,
 				height: 250
 			});
 
@@ -570,6 +571,7 @@ const adminCtrl = {
 
 			doc.addSVG(postsChart.replace(svgSizes, ''), 0, doc.y + 300, {
 				assumePt: true,
+				width: doc.page.width - 150,
 				height: 250
 			});
 
