@@ -54,7 +54,7 @@ const toBase64 = doc => {
         try {
             const stream = doc.pipe(new Base64Encode());
 
-            let base64Value = '';
+            let base64Value = 'data:application/pdf;base64,';
             stream.on('data', chunk => {
                 base64Value += chunk;
             });
@@ -493,7 +493,9 @@ const adminCtrl = {
 			const popularTagsChart = Buffer.from(ptBuffer).toString('utf-8');
 
 			doc.addSVG(popularTagsChart, (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y, {
-				assumePt: true
+				assumePt: true,
+				width: doc.page.width - 150,
+				height: 250
 			});
 
 			const dataPosts = {
@@ -566,7 +568,9 @@ const adminCtrl = {
 			const postsChart = Buffer.from(postsBuffer).toString('utf-8');
 
 			doc.addSVG(postsChart, (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y + 300, {
-				assumePt: true
+				assumePt: true,
+				width: doc.page.width - 150,
+				height: 250
 			});
 
 			doc.end();

@@ -235,7 +235,7 @@ const UserNav = ({ user, pathname, state }) => {
 		const data = await getReport();
 
 		const link = document.createElement('a');
-		link.href = 'data:application/pdf;base64, ' + data.content;
+		link.href = data.content;
 		link.download = 'Reporte.pdf';
 		document.body.appendChild(link);
 		link.click();
@@ -390,7 +390,7 @@ const MenuDropdown = ({ pathname, loading, userAPI, useTheme, getReport, ...prop
 		const data = await getReport();
 
 		const link = document.createElement('a');
-		link.href = 'data:application/pdf;base64, ' + data.content;
+		link.href = data.content;
 		link.download = 'Reporte.pdf';
 		document.body.appendChild(link);
 		link.click();
