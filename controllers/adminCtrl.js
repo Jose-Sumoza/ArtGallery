@@ -494,11 +494,7 @@ const adminCtrl = {
 
 			const popularTagsChart = Buffer.from(ptBuffer).toString('utf-8');
 
-			doc.addSVG(popularTagsChart.replace(svgSizes, ''), 0, doc.y, {
-				assumePt: true,
-				width: doc.page.width - 150,
-				height: 250
-			});
+			doc.addSVG(popularTagsChart.replace(svgSizes, ''), 0, doc.y);
 
 			const dataPosts = {
 				labels: [ "Publicadas", "Calificadas" ],
@@ -569,11 +565,7 @@ const adminCtrl = {
 
 			const postsChart = Buffer.from(postsBuffer).toString('utf-8');
 
-			doc.addSVG(postsChart.replace(svgSizes, ''), 0, doc.y + 300, {
-				assumePt: true,
-				width: doc.page.width - 150,
-				height: 250
-			});
+			doc.addSVG(postsChart.replace(svgSizes, ''), 0, doc.y + 300);
 
 			doc.end();
 
