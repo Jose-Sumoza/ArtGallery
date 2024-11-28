@@ -482,7 +482,7 @@ const adminCtrl = {
 						},
 						emptyDoughnut: {
 							color: '#eee',
-							width: 150,
+							width: 50,
 							radiusDecrease: 30
 						}
 					}
@@ -494,10 +494,8 @@ const adminCtrl = {
 
 			const popularTagsChart = Buffer.from(ptBuffer).toString('utf-8');
 
-			doc.addSVG(popularTagsChart.replace(svgSizes, ''), (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y, {
-				assumePt: true,
-				width: doc.page.width - 150,
-				height: 250
+			doc.addSVG(popularTagsChart.replace(svgSizes, ''), 0, doc.y, {
+				assumePt: true
 			});
 
 			const dataPosts = {
@@ -569,10 +567,8 @@ const adminCtrl = {
 
 			const postsChart = Buffer.from(postsBuffer).toString('utf-8');
 
-			doc.addSVG(postsChart.replace(svgSizes, ''), (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y + 300, {
-				assumePt: true,
-				width: doc.page.width - 150,
-				height: 250
+			doc.addSVG(postsChart.replace(svgSizes, ''), 0, doc.y + 300, {
+				assumePt: true
 			});
 
 			doc.end();
