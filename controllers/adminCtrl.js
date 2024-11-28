@@ -495,7 +495,8 @@ const adminCtrl = {
 			const popularTagsChart = Buffer.from(ptBuffer).toString('utf-8');
 
 			doc.addSVG(popularTagsChart.replace(svgSizes, ''), 0, doc.y, {
-				assumePt: true
+				assumePt: true,
+				height: 250
 			});
 
 			const dataPosts = {
@@ -568,7 +569,8 @@ const adminCtrl = {
 			const postsChart = Buffer.from(postsBuffer).toString('utf-8');
 
 			doc.addSVG(postsChart.replace(svgSizes, ''), 0, doc.y + 300, {
-				assumePt: true
+				assumePt: true,
+				height: 250
 			});
 
 			doc.end();
