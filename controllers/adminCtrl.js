@@ -5,6 +5,7 @@ const PDFDocument = require('pdfkit');
 const SVGtoPDF = require('svg-to-pdfkit');
 const { Base64Encode } = require('base64-stream');
 const { join } = require('path');
+const canvas = require('canvas');
 const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
 const Users = require('../models/userModel');
 const Posts = require('../models/postModel');
