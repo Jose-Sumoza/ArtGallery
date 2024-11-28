@@ -33,7 +33,6 @@ export const DataProvider = ({ children }) => {
 			setToken(accessToken);
 		} catch (err) {
 			const { response: { data: { content: msg } } } = err;
-			console.log(msg);
 			setLoading(false);
 		};
 	};
