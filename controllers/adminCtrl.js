@@ -26,7 +26,7 @@ const emptyDoughnut = {
 	id: 'emptyDoughnut',
 	afterDraw(chart, args, options) {
 		const { datasets } = chart.data;
-		const { color, width, radiusDecrease } = options;
+		const { color, radiusDecrease, cutout } = options;
 		let hasData = false;
 
 		for (let i = 0; i < datasets.length; i += 1) {
@@ -35,17 +35,25 @@ const emptyDoughnut = {
 		}
 
 		if (!hasData) {
-			const { chartArea: { left, top, right, bottom }, ctx } = chart;
+			const {
+				chartArea: { left, top, right, bottom },
+				ctx,
+			} = chart;
+
 			const centerX = (left + right) / 2;
 			const centerY = (top + bottom) / 2;
 			const r = Math.min(right - left, bottom - top) / 2;
 
 			ctx.beginPath();
-			ctx.lineWidth = width;
-			ctx.strokeStyle = color;
-			ctx.arc(centerX - 8, r + 28, (r - radiusDecrease || 0), 0.5 * Math.PI, 2.5 * Math.PI);
-			ctx.stroke();
-		}
+			ctx.arc(centerX - 8, centerY, r - (radiusDecrease || 0), 0, 2 * Math.PI);
+			ctx.fillStyle = color;
+			ctx.fill();
+
+			ctx.beginPath();
+			ctx.arc(centerX - 8, centerY, (r - (radiusDecrease || 0)) * ((cutout || 0) / 100), 0, 2 * Math.PI);
+			ctx.fillStyle = "white";
+			ctx.fill();
+		};
 	}
 };
 
@@ -362,11 +370,6 @@ const adminCtrl = {
 
 			const PaletteSVG = '<svg viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet"><g transform="translate(0.000000,512.000000) scale(0.1,-0.1)" fill="#141c24" stroke="none"><path d="M2200 4130 c-348 -36 -778 -159 -1075 -308 -165 -82 -402 -259 -541 -403 -251 -260 -364 -520 -364 -834 0 -201 47 -386 149 -589 207 -410 519 -682 976 -851 546 -202 1352 -218 2033 -39 631 164 1128 542 1392 1055 70 137 95 207 115 326 21 127 17 365 -9 458 -60 219 -221 395 -434 472 -349 128 -643 19 -857 -317 -26 -41 -84 -111 -129 -156 -65 -65 -92 -85 -134 -99 -109 -35 -222 -5 -277 73 -27 40 -30 51 -30 121 0 73 2 81 37 133 20 31 81 94 136 141 216 186 268 334 170 482 -87 131 -374 279 -623 321 -108 18 -416 26 -535 14z m557 -325 c114 -34 197 -151 196 -275 -1 -79 -20 -127 -75 -187 -54 -58 -108 -84 -184 -91 -82 -6 -150 17 -212 73 -70 63 -96 127 -90 225 3 43 12 89 21 107 68 130 206 189 344 148z m-1677 -619 c97 -33 548 -223 1198 -506 l1043 -453 62 19 c42 13 92 19 152 19 79 0 98 -4 155 -31 145 -68 277 -238 350 -448 l18 -53 -49 32 c-85 58 -135 69 -273 61 -165 -9 -194 -8 -243 14 -52 23 -134 98 -174 160 l-30 47 -1052 474 c-1037 467 -1181 537 -1334 650 -57 42 -67 54 -58 68 9 16 72 2 235 -53z" /></g></svg>';
 
-			// const chartCallback = ChartJS => {
-			// 	ChartJS.defaults.responsive = true;
-			// 	ChartJS.defaults.maintainAspectRatio = true;
-			// };
-
 			const doc = new PDFDocument({
 				size: 'A4',
 				margin: 25
@@ -379,7 +382,6 @@ const adminCtrl = {
 				type: 'svg',
 				width: doc.page.width - 150,
 				height: 250
-				// chartCallback
 			});
 
 			chartJSNodeCanvas.registerFont(RobotoURL, {
@@ -482,8 +484,7 @@ const adminCtrl = {
 						},
 						emptyDoughnut: {
 							color: '#eee',
-							width: 50,
-							radiusDecrease: 30
+							cutout: 50
 						}
 					}
 				},
