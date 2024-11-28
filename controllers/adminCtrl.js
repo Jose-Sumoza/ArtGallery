@@ -494,7 +494,7 @@ const adminCtrl = {
 
 			const popularTagsChart = Buffer.from(ptBuffer).toString('utf-8');
 
-			doc.addSVG(popularTagsChart.replace(svgSizes, ''), 0, doc.y, {
+			doc.addSVG(popularTagsChart.replace(svgSizes, ''), doc.page.width / 2 - ((doc.page.width - 150) / 2), doc.y, {
 				width: doc.page.width - 150,
 				height: 250
 			});
@@ -559,6 +559,10 @@ const adminCtrl = {
 							display: true,
 							text: "Obras",
 							color: "black",
+							font: {
+								family: 'Roboto-Black',
+								weight: 'black'
+							}
 						}
 					}
 				}
@@ -568,7 +572,7 @@ const adminCtrl = {
 
 			const postsChart = Buffer.from(postsBuffer).toString('utf-8');
 
-			doc.addSVG(postsChart.replace(svgSizes, ''), 0, doc.y + 300, {
+			doc.addSVG(postsChart.replace(svgSizes, ''), doc.page.width / 2 - ((doc.page.width - 150) / 2), doc.y + 300, {
 				width: doc.page.width - 150,
 				height: 250
 			});
