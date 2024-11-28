@@ -2,6 +2,7 @@ const { Types: { ObjectId } } = require('mongoose');
 const { v2: cloudinary } = require('cloudinary');
 const pLimit = require('p-limit');
 const Posts = require('../models/postModel');
+const Users = require('../models/userModel');
 const POST = require('../consts/post');
 
 cloudinary.config({
@@ -398,6 +399,45 @@ const postCtrl = {
 			});
 		};
 	},
+	getFeatured: async (req, res) => {
+		try {
+			const [ post ] = await Posts.aggregate([
+				{
+					$match: {
+						featured: true
+					}
+				},
+				{
+					$project: {
+						_id: 1,
+						title: 1,
+						description: 1,
+						images: 1
+					}
+				}
+			]);
+
+			if (!post) return res.json({
+				status: 400,
+				success: false,
+				content: "Obra destacada no encontrada."
+			});
+
+			return res.json({
+				status: 200,
+				success: true,
+				content: post
+			});
+		} catch (err) {
+			const { message } = err;
+
+			return res.json({
+				status: 500,
+				success: false,
+				content: message
+			});
+		};
+	},
 	createPost: async (req, res) => {
 		try {
 			const { title, description, tags } = req.body;
@@ -511,7 +551,17 @@ const postCtrl = {
 				content: "Acción inválida."
 			});
 
-			const post = await Posts.findOneAndDelete({ _id: post_id, author: userId });
+			const user = await Users.findById(req.user.id);
+
+			const post = await Posts.findOneAndDelete({
+				_id: post_id,
+				...(
+					user.role !== 0 ?
+						{ author: userId }
+					:
+						{}
+				)
+			});
 
 			if (!post) return res.json({
 				status: 400,

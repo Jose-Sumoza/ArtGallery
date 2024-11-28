@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const path = require("path");
 const userRouter = require('../routes/userRouter');
+const adminRouter = require('../routes/adminRouter');
 const artistRouter = require('../routes/artistRouter');
 const postRouter = require('../routes/postRouter');
 
@@ -46,6 +47,7 @@ mongoose.connection.on('error', err => {
 
 //ROUTES
 app.use('/user', userRouter);
+app.use('/api', adminRouter);
 app.use('/api', artistRouter);
 app.use('/api', postRouter);
 

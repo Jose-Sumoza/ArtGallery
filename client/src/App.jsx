@@ -119,11 +119,11 @@ const router = createBrowserRouter([
 			},
 			{
 				path: '/new',
-				element: <Protected to="/login" auth={ true }> <NewPost /> </Protected>
+				element: <Protected to="/login" auth={ true } role={ 1 }> <NewPost /> </Protected>
 			},
 			{
 				path: '/edit/:id',
-				element: <Protected to="/login" auth={ true }> <NewPost /> </Protected>
+				element: <Protected to="/login" auth={ true } role={ 1 }> <NewPost /> </Protected>
 			},
 			{
 				path: '/posts/:id',

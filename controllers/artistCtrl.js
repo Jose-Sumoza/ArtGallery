@@ -1,4 +1,3 @@
-const { Types: { ObjectId } } = require('mongoose');
 const Users = require('../models/userModel');
 
 const SORT = {

@@ -124,6 +124,8 @@ const ProfileTab = ({ state }) => {
 		return setUserState({ user: content });
 	};
 
+	if (user.role === 0) return <Navigate to='/profile/settings' replace />;
+
 	return (
 		<>
 			<header className='flex flex-col px-7 py-4 w-full rounded-t bg-link-water-200 dark:bg-bunker-900/30 gap-6'>
@@ -538,6 +540,8 @@ const ContactTab = ({ state }) => {
 			if (!success) toast.error(content);
 		};
 	};
+
+	if (user.role === 0) return <Navigate to='/profile/settings' replace />;
 
 	return (
 		<>
@@ -1099,13 +1103,15 @@ const PROFILE_OPTIONS = [
 		label: "edit",
 		title: "Perfil",
 		Icon: User,
-		content: ProfileTab
+		content: ProfileTab,
+		roles: [ 1 ]
 	},
 	{
 		label: "contact",
 		title: "Contacto",
 		Icon: Share,
-		content: ContactTab
+		content: ContactTab,
+		roles: [ 1 ]
 	},
 	{
 		divider: true
@@ -1114,7 +1120,8 @@ const PROFILE_OPTIONS = [
 		label: "settings",
 		title: "Cuenta",
 		Icon: Settings,
-		content: AccountTab
+		content: AccountTab,
+		roles: [ 0, 1 ]
 	}
 ];
 
@@ -1143,7 +1150,7 @@ export const ProfileEdit = () => {
 		</main>
 	);
 
-	const { names, lastnames, username, photo, createdAt } = user;
+	const { names, lastnames, username, photo, createdAt, role } = user;
 
 	const createdDate = DateTime.fromISO(createdAt).setLocale('es-VE');
 	const month = createdDate.toLocaleString({ month: 'long' });
@@ -1157,34 +1164,51 @@ export const ProfileEdit = () => {
 
 				<header className='flex flex-col items-center lg:flex-row justify-start flex-[1_1_0] gap-2'>
 	
-					<Link
-						to={ `/artists/${ username }` }
-						aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
-					>
-						<figure>
-							{
-								photo?.url ?
-									<Photo src={ photo.url } className='w-44 lg:w-24' />
-								:
-									<MissingPhoto className='w-24 rounded-full' />
-							}
-						</figure>
-					</Link>
+					{
+						role === 1 ?
+							<Link
+								to={ `/artists/${ username }` }
+								aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
+							>
+								<figure>
+									{
+										photo?.url ?
+											<Photo src={ photo.url } className='w-44 lg:w-24' />
+										:
+											<MissingPhoto className='w-24 rounded-full' />
+									}
+								</figure>
+							</Link>
+						:
+							<figure>
+								<MissingPhoto className='w-24 rounded-full' />
+							</figure>
+					}
 	
 					<div className='flex flex-col items-center lg:items-start justify-center h-full gap-1'>
 							
 						<span className="text-xs font-medium uppercase text-bunker-500">Configuración</span>
 	
-						<Link
-							to={ `/artists/${ username }` }
-							aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
-							className='text-2xl font-bold'
-						>
-							<h2>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
-						</Link>
+						{
+							role === 1 ?
+								<Link
+									to={ `/artists/${ username }` }
+									aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
+									className='text-2xl font-bold'
+								>
+									<h2>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
+								</Link>
+							:
+							<h2 className='text-2xl font-bold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
+						}
 	
 						<time className='text-xs text-bunker-500'>
-							Miembro desde { `${ month[0].toUpperCase() }${ month.slice(1) }` } { createdDate.year }
+							{
+								role === 1 ?
+									<>Miembro desde { `${ month[0].toUpperCase() }${ month.slice(1) }` } { createdDate.year }</>
+								:
+									<>Administrador</>
+							}
 						</time>
 	
 					</div>
@@ -1193,7 +1217,7 @@ export const ProfileEdit = () => {
 	
 				<ul className='flex lg:flex-col w-full h-full bg-link-water-100 dark:bg-bunker-900/50 lg:bg-transparent lg:dark:bg-transparent lg:gap-2'>
 					{
-						PROFILE_OPTIONS.map(({ label, title, Icon, divider }, ind) =>
+						PROFILE_OPTIONS.filter(({ roles, divider }) => roles?.includes(user.role) || divider).map(({ label, title, Icon, divider }, ind, array) =>
 							!divider ?
 								<li key={ label }>
 									<button
@@ -1205,7 +1229,10 @@ export const ProfileEdit = () => {
 									</button>
 								</li>
 							:
-								<div key={ `ind-${ ind }` } className='mx-1 my-3 lg:m-5 w-[2px] h-auto lg:h-px lg:w-auto bg-link-water-200 dark:bg-bunker-900/50'></div>
+								ind !== array.length - 1 && ind !== 0 ?
+									<div key={ `ind-${ ind }` } className='mx-1 my-3 lg:m-5 w-[2px] h-auto lg:h-px lg:w-auto bg-link-water-200 dark:bg-bunker-900/50'></div>
+								:
+									null
 						)
 					}
 				</ul>
@@ -1213,7 +1240,7 @@ export const ProfileEdit = () => {
 			</section>
 
 			<section className='flex flex-col flex-1 items-start justify-start w-full h-full'>
-				<CurrentTab user={ user } state={ state } />
+				<CurrentTab state={ state } />
 			</section>
 
 		</main>

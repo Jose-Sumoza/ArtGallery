@@ -18,11 +18,12 @@ export function PostsAPI(token) {
 		page = 1,
 		search = '',
 		sort = 'desc',
-		limit = 20
+		limit = 20,
+		featured = undefined
 	} = { page, search, sort, limit }) => {
 		try {
 			const { data } = await axios.get(
-				`/api/posts?page=${ page }&search=${ search.trim() }&sort=${ sort }&limit=${ limit }`
+				`/api/posts?page=${ page }&search=${ search.trim() }&sort=${ sort }&limit=${ limit }${ featured !== undefined ? '&featured=true' : '' }`
 			);
 
 			return data;
@@ -86,9 +87,20 @@ export function PostsAPI(token) {
 		};
 	};
 
+	const getFeatured = async () => {
+		try {
+			const { data } = await axios.get('/api/posts/featured');
+
+			return data;
+		} catch (err) {
+			return err.response.data.content;
+		};
+	}
+
 	return {
 		posts: [ posts, setPosts, getPosts ],
 		getById,
+		getFeatured,
 		delPosts,
 		createPost,
 		ratePost,

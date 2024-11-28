@@ -7,6 +7,8 @@ router.route('/posts')
 	.get(postsCtrl.getPosts)
 	.post(isAuth, fileParser, postsCtrl.createPost);
 
+router.get('/posts/featured', postsCtrl.getFeatured);
+
 router.route('/posts/:post_id')
 	.get(postsCtrl.getById)
 	.delete(isAuth, postsCtrl.deletePost)

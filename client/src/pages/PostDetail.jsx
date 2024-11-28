@@ -69,7 +69,7 @@ const DeletePost = ({ post, id }) => {
 
 			<Dialog.Title>¿Borrar publicación?</Dialog.Title>
 
-			<Dialog.Description>Esto no se puede deshacer</Dialog.Description>
+			<Dialog.Description>Esta acción no se podrá deshacer</Dialog.Description>
 
 			<Dialog.Buttons>
 
@@ -105,9 +105,10 @@ export const PostDetail = () => {
 		comment: ''
 	});
 	const state = useContext(GlobalState);
-	const { userAPI, postsAPI, modal: [ , setModal ], useTheme } = state;
+	const { userAPI, postsAPI, adminAPI, modal: [ , setModal ], useTheme } = state;
 	const { user: [ { user, isLogged } ] } = userAPI;
 	const { getById, ratePost } = postsAPI;
+	const { setFeatured } = adminAPI;
 	const { isDark } = useTheme;
 
 	const fetchPost = async () => {
@@ -136,40 +137,7 @@ export const PostDetail = () => {
 		</div>
 	);
 
-	const { author, title, description, images: [ img ], tags, rating, ratings, createdAt } = post;
-
-	const AUTHOR_OPTIONS = [
-		{
-			label: 'edit',
-			element: () => (
-				<div
-					data-tooltip-content="Editar"
-					data-tooltip-place='bottom'
-					data-tooltip-id='my-tooltip'
-					className='p-1 text-bunker-700 dark:text-mercury-100 bg-white dark:bg-bunker-900/50 rounded-full shadow-md cursor-pointer hover:text-accent-500'
-					onClick={ () => navigate( `/edit/${ params.id }` ) }
-				>
-					<Edit className='!w-4' />
-				</div>
-			)
-		},
-		{
-			label: 'delete',
-			element: () => (
-				<div
-					data-tooltip-content="Borrar"
-					data-tooltip-place='bottom'
-					data-tooltip-id='my-tooltip'
-					className='p-1 text-bunker-700 dark:text-mercury-100 bg-white dark:bg-bunker-900/50 rounded-full shadow-md cursor-pointer hover:text-accent-500'
-					onClick={ () => setModal({
-						children: <DeletePost post={ post } id={ params.id } />
-					})}
-				>
-					<Trash className='!w-4' />
-				</div>
-			)
-		}
-	];
+	const { author, title, description, images: [ img ], tags, rating, ratings, featured, createdAt } = post;
 
 	const onRate = value => {
 		if (!isLogged) return toast.error('Inicia sesión para calificar');
@@ -215,6 +183,73 @@ export const PostDetail = () => {
 		};
 	};
 
+	const handleFeatured = async () => {
+		try {
+			const data = await setFeatured(params.id);
+
+			const { status } = data;
+
+			if (status === 500) return toast.error("Error en el servidor.");
+			
+			await fetchPost();
+		} catch (err) {
+			const { response: { data } } = err;
+			const { success, content } = data;
+			
+			if (!success) toast.error(content);
+		};
+	};
+
+	const OPTIONS = [
+		{
+			label: 'edit',
+			element: () => (
+				<div
+					data-tooltip-content="Editar"
+					data-tooltip-place='bottom'
+					data-tooltip-id='my-tooltip'
+					className='p-1 text-bunker-700 dark:text-mercury-100 bg-white dark:bg-bunker-900/50 rounded-full shadow-md cursor-pointer hover:text-accent-500'
+					onClick={ () => navigate( `/edit/${ params.id }` ) }
+				>
+					<Edit className='!w-4' />
+				</div>
+			),
+			roles: [ 1 ]
+		},
+		{
+			label: 'highlight',
+			element: () => (
+				<div
+					data-tooltip-content={ featured ? 'Destacado' : 'Destacar' }
+					data-tooltip-place='bottom'
+					data-tooltip-id='my-tooltip'
+					className='p-1 text-bunker-700 dark:text-mercury-100 bg-white dark:bg-bunker-900/50 rounded-full shadow-md cursor-pointer hover:text-accent-500'
+					onClick={ handleFeatured }
+				>
+					{ featured ? <StarFilled className='!w-4 text-yellow-400' /> : <StarEmpty className='!w-4' /> }
+				</div>
+			),
+			roles: [ 0 ]
+		},
+		{
+			label: 'delete',
+			element: () => (
+				<div
+					data-tooltip-content="Borrar"
+					data-tooltip-place='bottom'
+					data-tooltip-id='my-tooltip'
+					className='p-1 text-bunker-700 dark:text-mercury-100 bg-white dark:bg-bunker-900/50 rounded-full shadow-md cursor-pointer hover:text-accent-500'
+					onClick={ () => setModal({
+						children: <DeletePost post={ post } id={ params.id } />
+					})}
+				>
+					<Trash className='!w-4' />
+				</div>
+			),
+			roles: [ 0, 1 ]
+		}
+	];
+
 	const fixedRating = Math.round(rating / .5) * .5;
 
 	return (
@@ -249,10 +284,10 @@ export const PostDetail = () => {
 					<section className='flex flex-col relative p-6 border border-link-water-100 dark:border-bunker-900/50 rounded-md gap-6'>
 
 						{
-							author._id === user?._id && isLogged ?
+							isLogged && (author._id === user?._id || user.role === 0) ?
 								<ul className='flex items-center absolute bottom-4 lg:top-4 lg:bottom-auto right-4 gap-4'>
 									{
-										AUTHOR_OPTIONS.map(({ label, element: Option }) =>
+										OPTIONS.filter(({ roles }) => roles.includes(user.role)).map(({ label, element: Option }) =>
 											<li key={ label }>
 												<Option />
 											</li>

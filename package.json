@@ -15,8 +15,12 @@
 	"author": "Jose Sumoza",
 	"license": "MIT",
 	"dependencies": {
+		"base64-stream": "^1.0.0",
 		"bcrypt": "^5.1.1",
 		"body-parser": "^1.20.2",
+		"canvas": "3.0.0-rc2",
+		"chart.js": "3.5.1",
+		"chartjs-node-canvas": "^4.1.6",
 		"cloudinary": "^2.4.0",
 		"concurrently": "^8.2.2",
 		"cookie-parser": "^1.4.6",
@@ -30,9 +34,19 @@
 		"luxon": "^3.5.0",
 		"mongoose": "^8.5.3",
 		"morgan": "^1.10.0",
-		"p-limit": "^3.1.0"
+		"p-limit": "^3.1.0",
+		"pdfkit": "^0.15.1",
+		"svg-to-pdfkit": "^0.1.8"
 	},
 	"devDependencies": {
 		"nodemon": "^3.1.7"
+	},
+	"overrides": {
+		"canvas": "3.0.0-rc2"
+	},
+	"pnpm": {
+		"overrides": {
+			"canvas": "3.0.0-rc2"
+		}
 	}
 }

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
-import { PostsAPI, UserAPI, ArtistsAPI } from '@apis';
+import { AdminAPI, ArtistsAPI, PostsAPI, UserAPI } from '@apis';
 import useTheme from '@hooks/useTheme';
 
 const reducer = (current, update) => ({...current, ...update});
@@ -49,9 +49,10 @@ export const DataProvider = ({ children }) => {
 	}, [ logged ]);
 
 	const state = {
+		adminAPI: AdminAPI(token),
+		artistsAPI: ArtistsAPI(),
 		postsAPI: PostsAPI(token),
 		userAPI: UserAPI(token, setLoading, setLogged),
-		artistsAPI: ArtistsAPI(),
 		setLogged,
 		loading: [ loading, setLoading ],
 		loadingModal: [ loadingModal, setLoadingModal ],

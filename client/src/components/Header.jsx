@@ -9,7 +9,7 @@ import Loading from '@components/Loading';
 import MissingPhoto from '@components/MissingPhoto';
 import Photo from '@components/Photo';
 import useScrollLock from '@hooks/useScrollLock';
-import { Cancel, Edit, Logout, Menu, Moon, Settings, SquareRoundedPlus, Sun } from '@icons';
+import { Cancel, Edit, Logout, Menu, Moon, ReportAnalytics, Settings, SquareRoundedPlus, Sun } from '@icons';
 
 const UserPhoto = ({ photo }) => {
 	return (
@@ -27,7 +27,7 @@ const UserPhoto = ({ photo }) => {
 const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 	const navigate = useNavigate();
 	const { unlockScroll } = useScrollLock();
-	const { names, lastnames, username, photo } = user;
+	const { names, lastnames, username, photo, role } = user;
 	const { token, userAPI: { user: [ , setUserState ] }, setLogged } = state;
 
 	const logout = async e => {
@@ -76,50 +76,70 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 	return (
 		<section className='absolute top-[90%] right-2 lg:-right-8 p-2 min-w-72 rounded-lg bg-white dark:bg-bunker-925 shadow-lg z-50 overflow-hidden' ref={ ref }>
 
-
 			<div className='flex flex-col w-full h-full '>
 				
 				<header className='mx-4 mt-4'>
 	
 					<div className='flex items-center gap-2'>
-	
-						<Link
-							to={ `artists/${ username }` }
-							aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
-							onClick={ () => setOpen(false) }
-						>
-							<UserPhoto photo={ photo } />
-						</Link>
+
+						{
+							role === 1 ?
+								<Link
+									to={ `artists/${ username }` }
+									aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
+									onClick={ () => setOpen(false) }
+								>
+									<UserPhoto photo={ photo } />
+								</Link>
+							:
+								<UserPhoto photo={ photo } />
+						}
 	
 						<div className='flex flex-col justify-start h-full text-primary dark:text-bunker-100'>
 	
-							<Link
-								to={ `artists/${ username }` }
-								className='text-sm font-bold hover:text-accent-500 transition-colors duration-100'
-								onClick={ () => setOpen(false) }
-							>
-								<h2 className='font-semibold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
-							</Link>
+							{
+								role === 1 ?
+									<Link
+										to={ `artists/${ username }` }
+										className='text-sm font-bold hover:text-accent-500 transition-colors duration-100'
+										onClick={ () => setOpen(false) }
+									>
+										<h2 className='font-semibold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
+									</Link>
+								:
+									<span
+										className='text-sm font-bold'
+									>
+										<h2 className='font-semibold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
+									</span>
+							}
 	
 							<div className='flex items-center text-sm'>
-	
-								<Link
-									to={ `artists/${ username }` }
-									className='opacity-50 hover:opacity-70 transition-opacity duration-100'
-									onClick={ () => setOpen(false) }
-								>
-									Ver perfil
-								</Link>
-	
-								<span className="mx-2 bg-primary dark:bg-bunker-100 w-1 h-1 rounded-full opacity-50"></span>
-	
-								<Link
-									to='profile/edit'
-									className='opacity-50 hover:opacity-70 transition-opacity duration-100'
-									onClick={ () => setOpen(false) }
-								>
-									Editar perfil
-								</Link>
+
+								{
+									role === 1 ?
+										<>
+											<Link
+												to={ `artists/${ username }` }
+												className='opacity-50 hover:opacity-70 transition-opacity duration-100'
+												onClick={ () => setOpen(false) }
+											>
+												Ver perfil
+											</Link>
+				
+											<span className="mx-2 bg-primary dark:bg-bunker-100 w-1 h-1 rounded-full opacity-50"></span>
+				
+											<Link
+												to='profile/edit'
+												className='opacity-50 hover:opacity-70 transition-opacity duration-100'
+												onClick={ () => setOpen(false) }
+											>
+												Editar perfil
+											</Link>
+										</>
+									:
+										<span className='opacity-50'>Administrador</span>
+								}
 	
 							</div>
 	
@@ -128,7 +148,7 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 					</div>
 				
 					{
-						photo?.url ?
+						role === 1 && photo?.url ?
 							<div className='hidden dark:block absolute top-0 left-0 w-full h-[50%] [mask-image:linear-gradient(to_bottom,black_0%,transparent_100%)] opacity-60 overflow-hidden -z-10'>
 								<figure className='w-full h-full'>
 									<img
@@ -172,8 +192,10 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 });
 
 const UserNav = ({ user, pathname, state }) => {
-	const { username, photo } = user;
+	const { username, photo, role } = user;
+	const { adminAPI: { getReport } } = state;
 	const [ open, setOpen ] = useState(false);
+	const [ loading, setLoading ] = useState(false);
 	const { lockScroll, unlockScroll } = useScrollLock();
 	const dropdownRef = useRef(null);
 
@@ -205,6 +227,26 @@ const UserNav = ({ user, pathname, state }) => {
 		};
 	};
 
+	const downloadReport = async e => {
+		if (loading) return;
+
+		setLoading(true);
+
+		const data = await getReport();
+
+		console.log('data:application/pdf;base64, ' + data.content)
+
+		const link = document.createElement('a');
+		link.href = 'data:application/pdf;base64, ' + data.content;
+		link.download = 'Reporte.pdf';
+		document.body.appendChild(link);
+		link.click();
+
+		document.body.removeChild(link);
+
+		setLoading(false);
+	};
+
 	useEffect(() => {
 		if (open) {
 			document.addEventListener('click', handleClick, false);
@@ -220,17 +262,31 @@ const UserNav = ({ user, pathname, state }) => {
 			onEvents: {
 				onContextMenu: e => e.preventDefault()
 			},
-			nav: true
+			nav: true,
+			roles: [ 1 ]
+		},
+		{
+			path: 'report',
+			title: 'Reporte diario',
+			mainElement: <ReportAnalytics className='w-[1.6rem] text-secondary dark:text-bunker-800 transition-colors duration-100' strokeWidth='1.7' />,
+			onEvents: {
+				onClick: downloadReport,
+				onContextMenu: e => e.preventDefault()
+			},
+			button: true,
+			roles: [ 0 ]
 		},
 		{
 			path: `artist/${ username }`,
 			mainElement: <UserPhoto photo={ photo } />,
 			onEvents: {
-				onClick: handleOpen
+				onClick: handleOpen,
+				onContextMenu: e => e.preventDefault()
 			},
 			elements: <>
 				{ open ? <UserDropdown user={ user } ref={ dropdownRef } setOpen={ setOpen } state={ state } /> : null }
-			</>
+			</>,
+			roles: [ 0, 1 ]
 		}
 	];
 
@@ -238,18 +294,32 @@ const UserNav = ({ user, pathname, state }) => {
 		<nav className='h-full'>
 			<ul className='flex items-center h-full'>
 				{
-					USER_PAGES.map(({ path, title, mainElement, onEvents, elements, nav }) =>
-						<li key={ path } className={ `hidden h-full relative ${ nav ? 'lg:list-item' : '!list-item'  }` }>
-							<Link
-								to={ path }
-								data-tooltip-content={ title && `/${ path }` !== pathname ? title : '' }
-								data-tooltip-place='bottom'
-								data-tooltip-id='my-tooltip'
-								className={ `${ `/${ path }` === pathname ? 'pointer-events-none after:opacity-100 [&_svg]:dark:text-bunker-400' : '' } ${ nav ? 'after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent-500 after:transition-opacity after:duration-100 after:opacity-0 [&:hover_svg]:dark:text-bunker-400 hover:after:opacity-100' : '' } flex items-center justify-center relative h-full aspect-square select-none` }
-								{ ...onEvents }
-							>
-								{ mainElement }
-							</Link>
+					USER_PAGES.filter(({ roles }) => roles.includes(role)).map(({ path, title, mainElement, onEvents, elements, nav, button }) =>
+						<li key={ path } className={ `hidden h-full relative ${ nav || button ? 'lg:list-item' : '!list-item'  }` }>
+							{
+								!button ?
+									<Link
+										to={ path }
+										data-tooltip-content={ title && `/${ path }` !== pathname ? title : '' }
+										data-tooltip-place='bottom'
+										data-tooltip-id='my-tooltip'
+										className={ `${ `/${ path }` === pathname ? 'pointer-events-none after:opacity-100 [&_svg]:dark:text-bunker-400' : '' } ${ nav ? 'after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent-500 after:transition-opacity after:duration-100 after:opacity-0 [&:hover_svg]:dark:text-bunker-400 hover:after:opacity-100' : '' } flex items-center justify-center relative h-full aspect-square select-none` }
+										{ ...onEvents }
+									>
+										{ mainElement }
+									</Link>
+								:
+									<button
+										type='button'
+										data-tooltip-content={ title }
+										data-tooltip-place='bottom'
+										data-tooltip-id='my-tooltip'
+										className='after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent-500 after:transition-opacity after:duration-100 after:opacity-0 [&:hover_svg]:dark:text-bunker-400 hover:after:opacity-100 flex items-center justify-center relative h-full aspect-square select-none'
+										{ ...onEvents }
+									>
+										{ mainElement }
+									</button>
+							}
 
 							{ elements ? elements : null }
 						</li>
@@ -290,10 +360,12 @@ const Nav = ({ pathname }) => {
 	);
 };
 
-const MenuDropdown = ({ pathname, loading, isLogged, useTheme, ...props }) => {
+const MenuDropdown = ({ pathname, loading, userAPI, useTheme, getReport, ...props }) => {
 	const { isDark, toggleTheme } = useTheme;
+	const { user: [ { user, isLogged } ] } = userAPI;
 	const { lockScroll, unlockScroll } = useScrollLock();
 	const [ open, setOpen ] = useState(false);
+	const [ fetching, setFetching ] = useState(false);
 	const dropdownRef = useRef(null);
 
 	const handleOpen = e => {
@@ -312,12 +384,43 @@ const MenuDropdown = ({ pathname, loading, isLogged, useTheme, ...props }) => {
 		document.removeEventListener('click', handleClick, false);
 	};
 
+	const downloadReport = async e => {
+		if (fetching) return;
+
+		setFetching(true);
+
+		const data = await getReport();
+
+		console.log('data:application/pdf;base64, ' + data.content)
+
+		const link = document.createElement('a');
+		link.href = 'data:application/pdf;base64, ' + data.content;
+		link.download = 'Reporte.pdf';
+		document.body.appendChild(link);
+		link.click();
+
+		document.body.removeChild(link);
+
+		setFetching(false);
+	};
+
 	const USER_PAGES = [
 		{
 			path: 'new',
 			title: 'Crear publicación',
 			element: <SquareRoundedPlus className='w-[1.6rem]' strokeWidth='1.7' />,
-			nav: true
+			nav: true,
+			roles: [ 1 ]
+		},
+		{
+			path: 'report',
+			title: 'Reporte diario',
+			element: <ReportAnalytics className='w-[1.6rem]' strokeWidth='1.7' />,
+			onEvents: {
+				onClick: downloadReport
+			},
+			button: true,
+			roles: [ 0 ]
 		}
 	];
 
@@ -361,25 +464,39 @@ const MenuDropdown = ({ pathname, loading, isLogged, useTheme, ...props }) => {
 						<ul className='flex items-center justify-between w-full'>
 							{
 								isLogged ?
-									USER_PAGES.map(({ path, title, element, nav }) =>
+									USER_PAGES.filter(({ roles }) => roles.includes(user.role)).map(({ path, title, element, onEvents, nav, button }) =>
 										<li
 											key={ path }
 											className={ `h-full ${ `/${ path }` === pathname ? 'text-accent-500' : 'text-secondary dark:text-bunker-800' }` }
 										>
-											<Link
-												to={ path }
-												data-tooltip-content={ title && `/${ path }` !== pathname ? title : '' }
-												data-tooltip-place='bottom'
-												data-tooltip-id='my-tooltip'
-												className={ ` ${ `/${ path }` === pathname ? 'pointer-events-none' : '' } ${ nav ? 'transition-colors duration-100' : '' } flex items-center justify-center h-full aspect-square select-none` }
-												onClick={ () => {
-													setOpen(false);
-													unlockScroll();
-													document.removeEventListener('click', handleClick, false);
-												}}
-											>
-												{ element }
-											</Link>
+											{
+												!button ?
+													<Link
+														to={ path }
+														data-tooltip-content={ title && `/${ path }` !== pathname ? title : '' }
+														data-tooltip-place='bottom'
+														data-tooltip-id='my-tooltip'
+														className={ ` ${ `/${ path }` === pathname ? 'pointer-events-none' : '' } ${ nav ? 'transition-colors duration-100' : '' } flex items-center justify-center h-full aspect-square select-none` }
+														onClick={ () => {
+															setOpen(false);
+															unlockScroll();
+															document.removeEventListener('click', handleClick, false);
+														}}
+													>
+														{ element }
+													</Link>
+												:
+													<button
+														type='button'
+														data-tooltip-content={ title }
+														data-tooltip-place='bottom'
+														data-tooltip-id='my-tooltip'
+														className='flex items-center justify-center h-full aspect-square select-none'
+														{ ...onEvents }
+													>
+														{ element }
+													</button>
+											}
 										</li>
 									)
 								:
@@ -443,7 +560,7 @@ const MenuDropdown = ({ pathname, loading, isLogged, useTheme, ...props }) => {
 const Header = () => {
 	const { pathname } = useLocation();
 	const state = useContext(GlobalState);
-	const { userAPI, loading: [ loadingState ], useTheme } = state;
+	const { userAPI, adminAPI: { getReport }, loading: [ loadingState ], useTheme } = state;
 	const { user: [ { user, isLogged } ] } = userAPI;
 	const { isDark, toggleTheme } = useTheme;
 	const [ loading, setLoading ] = useState(loadingState);
@@ -508,8 +625,9 @@ const Header = () => {
 				<MenuDropdown
 					pathname={ pathname }
 					loading={ loading }
-					isLogged={ isLogged }
+					userAPI={ userAPI }
 					useTheme={ useTheme }
+					getReport={ getReport }
 				/>
 	
 				<div className='flex items-center justify-center absolute left-[calc(50%-calc(var(--header-height)/2))] h-full aspect-square text-xl font-black text-primary dark:text-mercury-100'>
