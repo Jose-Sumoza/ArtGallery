@@ -68,6 +68,8 @@ const toBase64 = doc => {
     });
 };
 
+const svgSizes = /( )?((width|height)=")(?:[0-9]+)(")/g;
+
 const adminCtrl = {
 	getReport: async (req, res) => {
 		try {
@@ -480,7 +482,7 @@ const adminCtrl = {
 						},
 						emptyDoughnut: {
 							color: '#eee',
-							width: 50,
+							width: 150,
 							radiusDecrease: 30
 						}
 					}
@@ -492,7 +494,7 @@ const adminCtrl = {
 
 			const popularTagsChart = Buffer.from(ptBuffer).toString('utf-8');
 
-			doc.addSVG(popularTagsChart, (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y, {
+			doc.addSVG(popularTagsChart.replace(svgSizes, ''), (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y, {
 				assumePt: true,
 				width: doc.page.width - 150,
 				height: 250
@@ -567,7 +569,7 @@ const adminCtrl = {
 
 			const postsChart = Buffer.from(postsBuffer).toString('utf-8');
 
-			doc.addSVG(postsChart, (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y + 300, {
+			doc.addSVG(postsChart.replace(svgSizes, ''), (doc.page.width / 2) - ((doc.page.width - 150) / 2), doc.y + 300, {
 				assumePt: true,
 				width: doc.page.width - 150,
 				height: 250
