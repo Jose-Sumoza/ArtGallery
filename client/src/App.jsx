@@ -75,7 +75,7 @@ const AppLayout = () => {
 				<Toaster
 					position='bottom-right'
 					toastOptions={{
-						className: 'text-primary dark:text-mercury-100 bg-white dark:bg-bunker-900'
+						className: '!text-primary !dark:text-mercury-100 !bg-white !dark:bg-bunker-900'
 					}}
 				/>
 
