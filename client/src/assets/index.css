@@ -28,12 +28,13 @@
 		@apply after:absolute;
 		@apply after:bottom-0;
 		@apply after:w-screen;
-		@apply after:h-[40vh];
-		@apply lg:after:h-[90vh];
-		@apply after:translate-y-1/2;
+		@apply after:h-[80vh];
+		@apply lg:after:h-[100vh];
+		@apply after:translate-y-[0];
+		@apply lg:after:translate-y-[20%];
 		@apply after:[background-image:linear-gradient(to_right,#6e00ff,#2a00ff)];
-		@apply after:[mask-image:radial-gradient(90%_80%_at_50%_50%,black,transparent_60%)];
-		@apply lg:after:[mask-image:radial-gradient(black,transparent_60%)];
+		@apply after:[mask-image:linear-gradient(to_top,black_-210%,transparent_100%)];
+		@apply lg:after:[mask-image:linear-gradient(to_top,black_-210%,transparent_100%)];
 		@apply after:-z-[1];
 		@apply overflow-clip;
 	}

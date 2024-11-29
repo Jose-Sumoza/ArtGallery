@@ -193,7 +193,7 @@ const UserDropdown = forwardRef(({ user, setOpen, state }, ref) => {
 
 const UserNav = ({ user, pathname, state }) => {
 	const { username, photo, role } = user;
-	const { adminAPI: { getReport } } = state;
+	const { adminAPI: { getReport }, useTheme: { isDark } } = state;
 	const [ open, setOpen ] = useState(false);
 	const [ loading, setLoading ] = useState(false);
 	const { lockScroll, unlockScroll } = useScrollLock();
@@ -232,7 +232,11 @@ const UserNav = ({ user, pathname, state }) => {
 
 		setLoading(true);
 
-		const data = await getReport();
+		const data = await toast.promise(getReport(), {
+			loading: 'Generando reporte...',
+			success: 'Reporte generado exitosamente',
+			error: 'Ocurrió un error al generar el reporte'
+		});
 
 		const link = document.createElement('a');
 		link.href = data.content;
@@ -265,8 +269,8 @@ const UserNav = ({ user, pathname, state }) => {
 		},
 		{
 			path: 'report',
-			title: 'Reporte diario',
-			mainElement: <ReportAnalytics className='w-[1.6rem] text-secondary dark:text-bunker-800 transition-colors duration-100' strokeWidth='1.7' />,
+			title: loading ? 'Generando reporte' : 'Reporte diario',
+			mainElement: loading ? <Loading size="25" color={ isDark ? 'var(--bg-color)' : 'var(--color-primary)' } stroke="2.5" /> : <ReportAnalytics className='w-[1.6rem] text-secondary dark:text-bunker-800 transition-colors duration-100' strokeWidth='1.7' />,
 			onEvents: {
 				onClick: downloadReport,
 				onContextMenu: e => e.preventDefault()
@@ -312,7 +316,7 @@ const UserNav = ({ user, pathname, state }) => {
 										data-tooltip-content={ title }
 										data-tooltip-place='bottom'
 										data-tooltip-id='my-tooltip'
-										className='after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent-500 after:transition-opacity after:duration-100 after:opacity-0 [&:hover_svg]:dark:text-bunker-400 hover:after:opacity-100 flex items-center justify-center relative h-full aspect-square select-none'
+										className={ `after:absolute after:bottom-0 after:w-full after:h-[2px] after:bg-accent-500 after:transition-opacity after:duration-100 after:opacity-0 [&:hover_svg]:dark:text-bunker-400 hover:after:opacity-100 flex items-center justify-center relative h-full aspect-square select-none ${ loading ? 'cursor-not-allowed after:opacity-100' : '' }` }
 										{ ...onEvents }
 									>
 										{ mainElement }
@@ -387,7 +391,11 @@ const MenuDropdown = ({ pathname, loading, userAPI, useTheme, getReport, ...prop
 
 		setFetching(true);
 
-		const data = await getReport();
+		const data = await toast.promise(getReport(), {
+			loading: 'Generando reporte...',
+			success: 'Reporte generado exitosamente',
+			error: 'Ocurrió un error al generar el reporte'
+		});
 
 		const link = document.createElement('a');
 		link.href = data.content;
@@ -411,7 +419,7 @@ const MenuDropdown = ({ pathname, loading, userAPI, useTheme, getReport, ...prop
 		{
 			path: 'report',
 			title: 'Reporte diario',
-			element: <ReportAnalytics className='w-[1.6rem]' strokeWidth='1.7' />,
+			element: fetching ? <Loading size="25" color='var(--purple)' stroke="1.7" /> : <ReportAnalytics className='w-[1.6rem]' strokeWidth='1.7' />,
 			onEvents: {
 				onClick: downloadReport
 			},

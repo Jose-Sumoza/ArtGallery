@@ -113,7 +113,8 @@ const adminCtrl = {
 									}
 								}
 							]
-						}
+						},
+						role: 1
 					}
 				},
 				{

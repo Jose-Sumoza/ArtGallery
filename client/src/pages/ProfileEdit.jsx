@@ -1160,7 +1160,7 @@ export const ProfileEdit = () => {
 	return (
 		<main className='flex flex-col items-center lg:flex-row lg:items-start justify-start w-full h-full gap-8'>
 
-			<section className='flex flex-col items-center justify-start w-full lg:w-auto h-full gap-8 lg:gap-4'>
+			<section className='flex flex-col items-center justify-start w-full lg:w-auto lg:max-w-[306px] h-full gap-8 lg:gap-4'>
 
 				<header className='flex flex-col items-center lg:flex-row justify-start flex-[1_1_0] gap-2'>
 	
@@ -1170,7 +1170,7 @@ export const ProfileEdit = () => {
 								to={ `/artists/${ username }` }
 								aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
 							>
-								<figure>
+								<figure className='min-w-fit'>
 									{
 										photo?.url ?
 											<Photo src={ photo.url } className='w-44 lg:w-24' />
@@ -1180,7 +1180,7 @@ export const ProfileEdit = () => {
 								</figure>
 							</Link>
 						:
-							<figure>
+							<figure className='min-w-fit'>
 								<MissingPhoto className='w-24 rounded-full' />
 							</figure>
 					}
@@ -1194,12 +1194,12 @@ export const ProfileEdit = () => {
 								<Link
 									to={ `/artists/${ username }` }
 									aria-label={ `${ names.split(' ')[0] } ${ lastnames.split(' ')[0] }` }
-									className='text-2xl font-bold'
+									className='text-2xl font-bold line-clamp-2'
 								>
 									<h2>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
 								</Link>
 							:
-							<h2 className='text-2xl font-bold'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
+							<h2 className='text-2xl font-bold line-clamp-2'>{ names.split(' ')[0] } { lastnames.split(' ')[0] }</h2>
 						}
 	
 						<time className='text-xs text-bunker-500'>

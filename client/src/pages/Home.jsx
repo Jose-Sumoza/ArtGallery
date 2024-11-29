@@ -1,6 +1,5 @@
 import { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios';
 import { GlobalState } from "@/GlobalState";
 import Cards from "@components/Cards";
 import Loading from "@components/Loading";
@@ -49,9 +48,9 @@ const Banner = ({ useTheme, postsAPI }) => {
 							</figure>
 						</div>
 						
-						<div className='flex items-end justify-start relative bg-gradient-to-t from-[rgba(0,0,0,.8)] from-0% to-50% rounded-2xl overflow-hidden'>
+						<div className='flex items-end justify-start relative aspect-square lg:aspect-[16/8.2] bg-gradient-to-t from-[rgba(0,0,0,.8)] from-0% to-50% rounded-2xl overflow-hidden'>
 						
-							<figure className='flex items-center aspect-square lg:aspect-[16/8.2] overflow-hidden -z-10'>
+							<figure className='flex items-center w-full h-full overflow-hidden -z-10'>
 				
 								<img
 									src={ post ? post.images[0].url : BANNER.imgUrl }
@@ -196,7 +195,7 @@ const RecentArtists = ({ useTheme, artistsAPI }) => {
 
 export const Home = () => {
 	const state = useContext(GlobalState);
-	const { postsAPI, artistsAPI, useTheme, token } = state;
+	const { postsAPI, artistsAPI, useTheme } = state;
 
 	return (
 		<main className='flex flex-col'>
@@ -205,7 +204,7 @@ export const Home = () => {
 
 			<section className="flex flex-col mt-16 [&_h3]:text-2xl [&_h3]:font-bold gap-16">
 				<RecentPosts postsAPI={ postsAPI } useTheme={ useTheme } />
-				<RecentArtists artistsAPI={ artistsAPI } useTheme={ useTheme }  />
+				<RecentArtists artistsAPI={ artistsAPI } useTheme={ useTheme } />
 			</section>
 
 		</main>
