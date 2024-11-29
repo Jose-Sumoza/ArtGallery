@@ -12,7 +12,7 @@ export function AdminAPI(token) {
 
 			return data;
 		} catch (err) {
-			return err.response.data.content;
+			return err.message;
 		};
 	};
 
