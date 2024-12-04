@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const useTheme = () => {
-	const [ isDark, setIsDark ] = useState(window.getThemePreference() === 'dark');
+	const [ isDark, setIsDark ] = useState(true);
 
 	const toggleTheme = () => {
 		const html = document.documentElement;
@@ -12,6 +12,10 @@ const useTheme = () => {
 
 		setIsDark(isDark);
 	};
+
+	useEffect(() => {
+		setIsDark(window.getThemePreference() === "dark");
+	}, []);
 
 	return {
 		isDark,
