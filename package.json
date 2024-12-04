@@ -29,7 +29,6 @@
 		"express": "^4.21.1",
 		"formidable": "^3.5.1",
 		"google-libphonenumber": "^3.2.38",
-		"helmet": "^8.0.0",
 		"jsonwebtoken": "^9.0.2",
 		"luxon": "^3.5.0",
 		"mongoose": "^8.5.3",

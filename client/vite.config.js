@@ -1,9 +1,32 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import csp from "vite-plugin-csp-guard";
 
 export default defineConfig({
-	plugins: [ react() ],
+	plugins: [
+		react(),
+		csp({
+			dev: {
+				run: false
+			},
+			policy: {
+				"default-src": [ "'self'" ],
+				"script-src": [ "'self'" ],
+				"font-src": [ "'self'" ],
+				"img-src": [
+					"'self'",
+					"https://res.cloudinary.com",
+					"https://cdnjs.cloudflare.com/ajax/libs/twemoji/",
+					"blob:"
+				],
+				"style-src": [ "'self'" ],
+				"script-src-elem": [ "'self'" ],
+				"style-src-elem": [ "'self'", "'unsafe-inline'" ]
+			},
+			override: true
+		})
+	],
 	server: {
 		proxy: {
 			'/api': {
