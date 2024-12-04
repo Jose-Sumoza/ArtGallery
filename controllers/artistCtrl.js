@@ -16,9 +16,6 @@ const queryToRegex = query => {
 const artistCtrl = {
 	getById: async (req, res) => {
 		try {
-			const queries = req.query;
-			const limit = parseInt(queries?.limit) || 20;
-			const page = parseInt(queries?.page) || 1;
 			const { artist_id } = req.params;
 
 			const [ artist ] = await Users.aggregate([
@@ -39,8 +36,6 @@ const artistCtrl = {
 								}
 							},
 							{ $sort: { createdAt: -1 } },
-							{ $skip: page * limit - limit },
-							{ $limit: limit },
 							{
 								$project: {
 									author: 0,
@@ -126,7 +121,32 @@ const artistCtrl = {
 					$facet: {
 						docs: [
 							{
+								$lookup: {
+									from: 'posts',
+									let: { authorID: '$_id' },
+									pipeline: [
+										{
+											$match: {
+												$expr: { $eq: [ "$author", "$$authorID" ] } ,
+											}
+										}
+									],
+									as: 'posts'
+								}
+							},
+							{
+								$match: {
+									$expr: {
+										$gt: [
+											{ $size: "$posts" },
+											0
+										]
+									}
+								}
+							},
+							{
 								$project: {
+									posts: 0,
 									email: 0,
 									password: 0,
 									role: 0,
@@ -143,6 +163,30 @@ const artistCtrl = {
 							{ $limit: limit }
 						],
 						count: [
+							{
+								$lookup: {
+									from: 'posts',
+									let: { authorID: '$_id' },
+									pipeline: [
+										{
+											$match: {
+												$expr: { $eq: [ "$author", "$$authorID" ] } ,
+											}
+										}
+									],
+									as: 'posts'
+								}
+							},
+							{
+								$match: {
+									$expr: {
+										$gt: [
+											{ $size: "$posts" },
+											0
+										]
+									}
+								}
+							},
 							{ $count: "qty" }
 						]
 					}
