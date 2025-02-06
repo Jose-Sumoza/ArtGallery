@@ -208,5 +208,5 @@ export const Home = () => {
 			</section>
 
 		</main>
-	)
+	);
 };

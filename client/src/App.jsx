@@ -2,6 +2,7 @@ import { useEffect, useContext } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { Tooltip } from 'react-tooltip';
+import { Analytics } from "@vercel/analytics/react";
 import { DataProvider, GlobalState } from '@/GlobalState';
 import Footer from '@components/Footer';
 import Header from '@components/Header';
@@ -96,6 +97,7 @@ const AppLayout = () => {
 					opacity={ 1 }
 				/>
 
+				<Analytics />
 			</ScrollToTop>
 		</DataProvider>
 	);
